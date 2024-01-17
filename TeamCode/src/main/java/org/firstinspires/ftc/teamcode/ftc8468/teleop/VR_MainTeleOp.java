@@ -101,6 +101,14 @@ public class VR_MainTeleOp extends LinearOpMode {
             drive.activateIntake();
         }
 
+        if(gamepad2.left_bumper){
+            drive.deactivateLeftClimb();
+            drive.deactivateRightClimb();
+        }
+        if(gamepad2.right_bumper) {
+            drive.activateLeftClimb();
+            drive.activateRightClimb();
+        }
         ////////////
 
         if ((gamepad1.dpad_up) && isArmUp && (isBottomReached || isVertSensorTouchedOnce)) {

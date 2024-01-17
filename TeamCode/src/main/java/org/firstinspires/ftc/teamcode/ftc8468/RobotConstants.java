@@ -19,7 +19,11 @@ public class RobotConstants {
 
 
 
+    public static final float LEFT_CLIMB_POSITION_ACTIVE = 0.0f;
+    public static final float LEFT_CLIMB_POSITION_DEACTIVE= 1.0f;
 
+    public static final float RIGHT_CLIMB_POSITION_ACTIVE = 0.0f;
+    public static final float RIGHT_CLIMB_POSITION_DEACTIVE= 1.0f;
 
 
 

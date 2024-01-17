@@ -62,12 +62,12 @@ public class SplitAveragePipeline extends OpenCvPipeline {
 //        zone1 = input.submat(new Rect(60, 170, 356, 285));
 //        zone2 = input.submat(new Rect(735, 170, 253, 230));
         if (zoneView == ZONE_VIEW.LEFT) {
-            zone1 = input.submat(new Rect(520, 350, 200, 250));
-            zone2 = input.submat(new Rect(0, 310, 200, 250));
+            zone1 = input.submat(new Rect(900, 280, 200, 250));
+            zone2 = input.submat(new Rect(420, 270, 200, 250));
         }
         else {
-            zone1 = input.submat(new Rect(480, 310, 200, 250));
-            zone2 = input.submat(new Rect(0, 310, 200, 250));
+            zone1 = input.submat(new Rect(950, 290, 200, 250));
+            zone2 = input.submat(new Rect(480, 270, 200, 250));
         }
 
         //Averaging the colors in the zones
@@ -155,6 +155,8 @@ public class SplitAveragePipeline extends OpenCvPipeline {
     public double getMaxDistance(){
         return max_distance;
     }
+
+    public void setZoneView(ZONE_VIEW zoneView) {this.zoneView = zoneView;}
 
     public ZONE get_element_zone(){
         return color_zone;

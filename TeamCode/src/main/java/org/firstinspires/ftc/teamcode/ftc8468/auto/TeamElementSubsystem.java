@@ -30,7 +30,7 @@ public class TeamElementSubsystem {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(camW, camH, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                camera.startStreaming(camW, camH, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -77,5 +77,10 @@ public class TeamElementSubsystem {
 
     public double getMaxDistance(){
         return splitAveragePipeline.getMaxDistance();
+    }
+
+    public void setZoneView(SplitAveragePipeline.ZONE_VIEW zoneView)
+    {
+        splitAveragePipeline.setZoneView(zoneView);
     }
 }

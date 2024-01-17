@@ -23,6 +23,9 @@ public class RobotDrive extends MecanumDrive {
     protected Servo leftClaw;
     protected Servo rightClaw;
 
+    protected Servo leftClimb;
+    protected Servo rightClimb;
+
     protected DigitalChannel horizSensorBottom;
 
     final int LIFT_TOLERANCE = 0;
@@ -93,6 +96,9 @@ public class RobotDrive extends MecanumDrive {
 
         leftClaw = hwMap.get(Servo.class, "leftClaw");
         rightClaw = hwMap.get(Servo.class, "rightClaw");
+
+        leftClimb = hwMap.get(Servo.class, "leftClimb");
+        rightClimb = hwMap.get(Servo.class, "rightClimb");
 
         horizSensorBottom = hwMap.get(DigitalChannel.class, "horizTouchBottom");
         horizSensorBottom.setMode(DigitalChannel.Mode.INPUT);
@@ -461,6 +467,20 @@ public class RobotDrive extends MecanumDrive {
         rightClaw.setPosition(RobotConstants.RIGHT_CLAW_POSITION_DEACTIVE);
     }
 
+
+    public void activateLeftClimb() {
+        leftClimb.setPosition(RobotConstants.LEFT_CLIMB_POSITION_ACTIVE);
+    }
+    public void activateRightClimb() {
+        rightClimb.setPosition(RobotConstants.RIGHT_CLIMB_POSITION_ACTIVE);
+    }
+
+    public void deactivateLeftClimb() {
+        leftClimb.setPosition(RobotConstants.LEFT_CLIMB_POSITION_DEACTIVE);
+    }
+    public void deactivateRightClimb() {
+        rightClimb.setPosition(RobotConstants.RIGHT_CLIMB_POSITION_DEACTIVE);
+    }
     public void activateLift(int ticks) {
         // activateDumpServoHalf();
         liftMotorR.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
