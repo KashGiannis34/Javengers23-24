@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.ftc8468.auto.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.old.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.temp.VisionAutoDrive;
 
 
