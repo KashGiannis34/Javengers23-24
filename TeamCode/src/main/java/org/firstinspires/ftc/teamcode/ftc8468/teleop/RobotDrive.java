@@ -26,6 +26,13 @@ public class RobotDrive extends MecanumDrive {
     protected Servo leftClimb;
     protected Servo rightClimb;
 
+    protected Servo leftRaiseClimb;
+    protected Servo rightRaiseClimb;
+
+    protected Servo intakeServo;
+
+    protected Servo droneServo;
+
     protected DigitalChannel horizSensorBottom;
 
     final int LIFT_TOLERANCE = 0;
@@ -64,7 +71,7 @@ public class RobotDrive extends MecanumDrive {
 
     protected VoltageSensor batteryVoltageSensor;
 
-    protected float speedMultiplier = 0.5f; //0.93f;
+    protected float speedMultiplier = 0.3f; //0.93f;
     final int VERT_TOLERANCE = 5;
 //    final int HORIZ_TOLERANCE = 20;
 
@@ -99,6 +106,13 @@ public class RobotDrive extends MecanumDrive {
 
         leftClimb = hwMap.get(Servo.class, "leftClimb");
         rightClimb = hwMap.get(Servo.class, "rightClimb");
+
+        leftRaiseClimb = hwMap.get(Servo.class, "leftRaiseClimb");
+        rightRaiseClimb = hwMap.get(Servo.class, "rightRaiseClimb");
+
+        intakeServo = hwMap.get(Servo.class, "intakeServo");
+
+        droneServo = hwMap.get(Servo.class, "drone");
 
         horizSensorBottom = hwMap.get(DigitalChannel.class, "horizTouchBottom");
         horizSensorBottom.setMode(DigitalChannel.Mode.INPUT);
@@ -437,9 +451,12 @@ public class RobotDrive extends MecanumDrive {
     //////////////////////////////////////////
 
     public void activateIntake() {
-        intakeMotor.setPower(1.0);
+        intakeMotor.setPower(.9);
     }
-    public void deactivateIntake() {
+    public void reverseIntake() {
+        intakeMotor.setPower(-1.0);
+    }
+    public void stopIntake() {
         intakeMotor.setPower(0);
     }
 
@@ -481,6 +498,36 @@ public class RobotDrive extends MecanumDrive {
     public void deactivateRightClimb() {
         rightClimb.setPosition(RobotConstants.RIGHT_CLIMB_POSITION_DEACTIVE);
     }
+
+    public void activateLeftRaiseClimb() {
+        leftRaiseClimb.setPosition(RobotConstants.LEFT_RAISE_CLIMB_POSITION_ACTIVE);
+    }
+
+    public void activateLeftRaiseClimbDrone() {
+        leftRaiseClimb.setPosition(RobotConstants.LEFT_RAISE_CLIMB_POSITION_DRONE);
+    }
+    public void activateRightRaiseClimb() {
+        rightRaiseClimb.setPosition(RobotConstants.RIGHT_RAISE_CLIMB_POSITION_ACTIVE);
+    }
+    public void deactivateLeftRaiseClimb() {
+        leftRaiseClimb.setPosition(RobotConstants.LEFT_RAISE_CLIMB_POSITION_DEACTIVE);
+    }
+    public void deactivateRightRaiseClimb() {
+        rightRaiseClimb.setPosition(RobotConstants.RIGHT_RAISE_CLIMB_POSITION_DEACTIVE);
+    }
+    public void activateIntakeServo() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_ACTIVE);
+    }
+    public void deactivateIntakeServo() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_REST);
+    }
+
+    public void activateDroneServo() {
+        droneServo.setPosition(RobotConstants.DRONE_POSITION_ACTIVE);
+    }
+    public void deactivateDroneServo() {
+        droneServo.setPosition(RobotConstants.DRONE_POSITION_REST);
+    }
     public void activateLift(int ticks) {
         // activateDumpServoHalf();
         liftMotorR.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -499,11 +546,9 @@ public class RobotDrive extends MecanumDrive {
         liftMotorL.setPower(power);
     }
 
-    public void deactivateLift() {
-        int ticks = 150;
+    public void downLift() {
+        int ticks = 1000;
         double power = -1.0; //-1.0;
-        //deactivateDumpServo();
-
         liftMotorR.setTargetPosition(-ticks); // negative ticks for opposite direction
         liftMotorL.setTargetPosition(ticks); // negative ticks for opposite direction
         liftMotorR.setTargetPositionTolerance(LIFT_TOLERANCE);
@@ -512,8 +557,19 @@ public class RobotDrive extends MecanumDrive {
         liftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotorR.setPower(power);
         liftMotorL.setPower(power);
+    }
 
-        //startIntake();
+    public void deactivateLift() {
+        int ticks = 150;
+        double power = -1.0; //-1.0;
+        liftMotorR.setTargetPosition(-ticks); // negative ticks for opposite direction
+        liftMotorL.setTargetPosition(ticks); // negative ticks for opposite direction
+        liftMotorR.setTargetPositionTolerance(LIFT_TOLERANCE);
+        liftMotorL.setTargetPositionTolerance(LIFT_TOLERANCE);
+        liftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotorR.setPower(power);
+        liftMotorL.setPower(power);
     }
 
     public void stopLift() {

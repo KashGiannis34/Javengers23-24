@@ -6,6 +6,7 @@ public class RobotConstants {
 
     public static final float ARM_POSITION_ACTIVE = 1.0f;
     public static final float ARM_POSITION_REST = .47f;
+    public static final float ARM_POSITION_AUTO = .62f;
     public static final float ARM_POSITION_DEACTIVE= 0.31f;
 
     public static final float LEFT_CLAW_POSITION_ACTIVE = 0.28f;
@@ -25,12 +26,25 @@ public class RobotConstants {
     public static final float RIGHT_CLIMB_POSITION_ACTIVE = 0.0f;
     public static final float RIGHT_CLIMB_POSITION_DEACTIVE= 1.0f;
 
+    public static final float RIGHT_RAISE_CLIMB_POSITION_ACTIVE = 0.55f;
+    public static final float RIGHT_RAISE_CLIMB_POSITION_DEACTIVE= 0.92f;
 
+    public static final float LEFT_RAISE_CLIMB_POSITION_ACTIVE = 0.88f;
+    public static final float LEFT_RAISE_CLIMB_POSITION_DRONE = 0.62f;
+    public static final float LEFT_RAISE_CLIMB_POSITION_DEACTIVE= 0.53f;
+
+    public static final float INTAKE_POSITION_ACTIVE = 0.8f;
+    public static final float INTAKE_POSITION_REST = 0.59f;
+
+//    public static final float DRONE_POSITION_ACTIVE = 0.75f;
+//    public static final float DRONE_POSITION_REST = 0.32f;
+    public static final float DRONE_POSITION_ACTIVE = 1.0f;
+    public static final float DRONE_POSITION_REST = 0.55f;
 
 
     // Servo Positions...
-    public static final float INTAKE_SERVO_POSITION_ACTIVE = 0.0f;
-    public static final float INTAKE_SERVO_POSITION_REST = 0.5f;
+//    public static final float INTAKE_SERVO_POSITION_ACTIVE = 0.0f;
+//    public static final float INTAKE_SERVO_POSITION_REST = 0.5f;
 
     public static final float LEFT_LINKAGE_POSITION_ACTIVE = 0.20f;
     public static final float LEFT_LINKAGE_POSITION_REST = 0.70f;

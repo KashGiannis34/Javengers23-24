@@ -24,6 +24,8 @@ public class RRAutoDrive extends SampleMecanumDrive {
     protected Servo leftClaw;
     protected Servo rightClaw;
 
+    protected Servo intakeServo;
+
     protected DigitalChannel horizSensorBottom;
 
     final int LIFT_TOLERANCE = 0;
@@ -129,6 +131,8 @@ public class RRAutoDrive extends SampleMecanumDrive {
 
         leftClaw = hwMap.get(Servo.class, "leftClaw");
         rightClaw = hwMap.get(Servo.class, "rightClaw");
+
+        intakeServo = hwMap.get(Servo.class, "intakeServo");
 
         horizSensorBottom = hwMap.get(DigitalChannel.class, "horizTouchBottom");
         horizSensorBottom.setMode(DigitalChannel.Mode.INPUT);
@@ -612,6 +616,10 @@ public class RRAutoDrive extends SampleMecanumDrive {
     public void restArm() {
         arm.setPosition(RobotConstants.ARM_POSITION_REST);
     }
+    public void restArmAuto() {
+        arm.setPosition(RobotConstants.ARM_POSITION_AUTO);
+    }
+
     public void deactivateArm() {
         arm.setPosition(RobotConstants.ARM_POSITION_DEACTIVE);
     }
@@ -629,6 +637,14 @@ public class RRAutoDrive extends SampleMecanumDrive {
     public void deactivateRightClaw() {
         rightClaw.setPosition(RobotConstants.RIGHT_CLAW_POSITION_DEACTIVE);
     }
+
+    public void activateIntakeServo() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_ACTIVE);
+    }
+    public void deactivateIntakeServo() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_REST);
+    }
+
 
     public void activateLift(int ticks) {
         // activateDumpServoHalf();

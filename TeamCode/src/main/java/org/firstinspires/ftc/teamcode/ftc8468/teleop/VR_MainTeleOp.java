@@ -34,17 +34,26 @@ public class VR_MainTeleOp extends LinearOpMode {
     boolean isLiftActivated = false;
     boolean isBottomReached = false;
     boolean isVertSensorTouchedOnce = false;
-    boolean isArmUp = false;
+//    boolean isArmUp = false;
     boolean isArmActivatedHalfway = false;
     boolean isGrabberActive = false;
+    boolean gamepad1XisPressed = false;
+    boolean intakeActive = true;
 
 //    boolean isWheelMotorRunning = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
         drive.init(hardwareMap);
-        drive.deactivateArm();
-        drive.deactivateLift();
+//        drive.deactivateArm();
+        drive.restArm();
+        drive.downLift();
+        drive.activateIntakeServo();
+//        drive.deactivateLeftRaiseClimb();
+//        drive.deactivateRightRaiseClimb();
+//        drive.deactivateLeftClimb();
+//        drive.deactivateRightClimb();
+//        drive.deactivateDroneServo();
         waitForStart();
 
         if (isStopRequested()) return;
@@ -75,71 +84,140 @@ public class VR_MainTeleOp extends LinearOpMode {
 
         if(gamepad1.left_bumper){
             drive.deactivateLeftClaw();
-            drive.deactivateRightClaw();
         }
         if(gamepad1.right_bumper) {
+            drive.deactivateRightClaw();
+        }
+        if(gamepad1.a) {
             drive.activateLeftClaw();
             drive.activateRightClaw();
-            drive.deactivateIntake();
+            drive.stopIntake();
+            drive.activateIntakeServo();
         }
-        if(gamepad1.x){
-            drive.activateArm();
-        }
-        if(gamepad1.a){
-            drive.restArm();
-            isArmUp = true;
-        }
-        if(gamepad1.b){
-            if(!isLiftActivated) {
-                drive.deactivateArm();
-                isArmUp = false;
-                drive.deactivateLeftClaw();
-                drive.deactivateRightClaw();
-            }
+
+//        if(gamepad1.b){
+//            if(!isLiftActivated) {
+//                drive.deactivateArm();
+////                isArmUp = false;
+//                drive.deactivateLeftClaw();
+//                drive.deactivateRightClaw();
+//            }
+//        }
+        if((gamepad1.x) && (isVertSensorTouchedOnce)){
+            drive.activateIntake();
+            drive.deactivateIntakeServo();
+            drive.deactivateArm();
+            drive.deactivateLeftClaw();
+            drive.deactivateRightClaw();
         }
         if(gamepad1.y){
-            drive.activateIntake();
+            drive.reverseIntake();
         }
 
-        if(gamepad2.left_bumper){
-            drive.deactivateLeftClimb();
-            drive.deactivateRightClimb();
-        }
-        if(gamepad2.right_bumper) {
-            drive.activateLeftClimb();
-            drive.activateRightClimb();
-        }
-        ////////////
-
-        if ((gamepad1.dpad_up) && isArmUp && (isBottomReached || isVertSensorTouchedOnce)) {
+        if ((gamepad1.dpad_left) && (isBottomReached || isVertSensorTouchedOnce)) {
             if (!isLiftActivated) {
                 //drive.reverseIntake();
-                drive.activateLift(liftMotorTicks);
+                drive.activateLift(550);
+                drive.activateArm();
+                drive.stopIntake();
+//                isArmUp = true;
+                drive.activateIntakeServo();
                 driveSlow = true;
                 isLiftActivated = true;
                 isBottomReached = false;
                 isVertSensorTouchedOnce = false;
 
-                //Optimization Commands
-//                drive.closeKicker();
-//                drive.extendHorizSlideHalf();
-//                drive.flipArm();
+            }
+        }
 
+        if ((gamepad1.dpad_up) && (isBottomReached || isVertSensorTouchedOnce)) {
+            if (!isLiftActivated) {
+                //drive.reverseIntake();
+                drive.activateLift(800);
+                drive.activateArm();
+                drive.stopIntake();
+//                isArmUp = true;
+                drive.activateIntakeServo();
+                driveSlow = true;
+                isLiftActivated = true;
+                isBottomReached = false;
+                isVertSensorTouchedOnce = false;
 
             }
         }
 
+        if ((gamepad1.dpad_right) && (isBottomReached || isVertSensorTouchedOnce)) {
+            if (!isLiftActivated) {
+
+                drive.activateLift(1250);
+                drive.activateArm();
+                drive.stopIntake();
+//                isArmUp = true;
+                drive.activateIntakeServo();
+                driveSlow = true;
+                isLiftActivated = true;
+                isBottomReached = false;
+                isVertSensorTouchedOnce = false;
+
+            }
+        }
+
+
         if (gamepad1.dpad_down) {
             if (isLiftActivated) {
                 drive.deactivateLift();
+                drive.restArm();
+                drive.reverseIntake();
+                drive.activateIntakeServo();
+//                isArmUp = true;
                 driveSlow = false;
                 isLiftActivated = false;
             }
         }
 
+        if(gamepad2.left_bumper){
+            drive.deactivateLeftClimb();
+            drive.deactivateRightClimb();
+            drive.deactivateIntakeServo();
+        }
+        if(gamepad2.right_bumper) {
+            drive.activateLeftClimb();
+            drive.activateRightClimb();
+            drive.deactivateIntakeServo();
+            drive.stopIntake();
+        }
+        if(gamepad2.y) {
+            drive.activateRightRaiseClimb();
+            drive.activateLeftRaiseClimb();
+            drive.deactivateIntakeServo();
+            drive.stopIntake();
+        }
+        if(gamepad2.x) {
+            drive.deactivateRightRaiseClimb();
+            drive.deactivateLeftRaiseClimb();
+            drive.deactivateIntakeServo();
+            drive.stopIntake();
+        }
+        if(gamepad2.a) {
+            drive.activateDroneServo();
+            drive.deactivateIntakeServo();
+            drive.stopIntake();
+        }
+        if(gamepad2.b) {
+            drive.activateLeftRaiseClimbDrone();
+            drive.deactivateIntakeServo();
+            drive.stopIntake();
+        }
+
+        if(gamepad2.dpad_down) {
+            drive.restArm();
+            drive.downLift();
+            drive.activateIntakeServo();
+        }
+
         telemetry.addData("isBottomReached: ", isBottomReached);
         telemetry.addData("isLiftActivated: ", isLiftActivated);
-        telemetry.addData("isArmUp: ", isArmUp);
+//        telemetry.addData("isArmUp: ", isArmUp);
         telemetry.update();
     }
 
