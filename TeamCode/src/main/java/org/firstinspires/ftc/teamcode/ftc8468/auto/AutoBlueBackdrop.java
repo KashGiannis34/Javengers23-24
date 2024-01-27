@@ -76,12 +76,12 @@ public class AutoBlueBackdrop extends LinearOpMode {
                         drive.restArm();
                     })
                     .lineTo(new Vector2d(53, 34), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
-                    .lineTo(new Vector2d(48, 62))
+                    .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
-                    .lineTo(new Vector2d(60, 62))
+                    .lineTo(new Vector2d(60, 62), velCon, accCon)
                     .build();
             trajSeqRight = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
@@ -106,12 +106,12 @@ public class AutoBlueBackdrop extends LinearOpMode {
                         drive.restArm();
                     })
                     .lineTo(new Vector2d(53.8, 29.5), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
-                    .lineTo(new Vector2d(48, 62))
+                    .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
-                    .lineTo(new Vector2d(60, 62))
+                    .lineTo(new Vector2d(60, 62), velCon, accCon)
                     .build();
             trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
@@ -136,12 +136,12 @@ public class AutoBlueBackdrop extends LinearOpMode {
                         drive.restArm();
                     })
                     .lineTo(new Vector2d(53.4, 39), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
-                    .lineTo(new Vector2d(48, 62))
+                    .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
-                    .lineTo(new Vector2d(60, 62))
+                    .lineTo(new Vector2d(60, 62), velCon, accCon)
                     .build();
         }
         else {

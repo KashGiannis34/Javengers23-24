@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.virtualrobot.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.RobotConstants;
@@ -182,10 +183,10 @@ public class RobotDrive extends MecanumDrive {
         double backRightSpeed = forward + strafe - rotate;
 
         if(driveSlow) {
-            frontLeftSpeed = frontLeftSpeed * speedMultiplier;
-            frontRightSpeed = frontRightSpeed * speedMultiplier;
-            backLeftSpeed = backLeftSpeed * speedMultiplier;
-            backRightSpeed = backRightSpeed * speedMultiplier;
+            frontLeftSpeed = Range.clip((frontLeftSpeed+strafe*.5) * speedMultiplier,-1,1);
+            frontRightSpeed = Range.clip((frontRightSpeed-strafe*.5) * speedMultiplier,-1,1);
+            backLeftSpeed = Range.clip((backLeftSpeed-strafe*.5) * speedMultiplier,-1,1);
+            backRightSpeed = Range.clip((backRightSpeed+strafe*.5) * speedMultiplier,-1,1);
         }
 
         setSpeeds(frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed);
@@ -506,9 +507,15 @@ public class RobotDrive extends MecanumDrive {
     public void activateLeftRaiseClimbDrone() {
         leftRaiseClimb.setPosition(RobotConstants.LEFT_RAISE_CLIMB_POSITION_DRONE);
     }
+
     public void activateRightRaiseClimb() {
         rightRaiseClimb.setPosition(RobotConstants.RIGHT_RAISE_CLIMB_POSITION_ACTIVE);
     }
+
+    public void activateRightRaiseClimbDrone() {
+        rightRaiseClimb.setPosition(RobotConstants.RIGHT_RAISE_CLIMB_POSITION_DRONE);
+    }
+
     public void deactivateLeftRaiseClimb() {
         leftRaiseClimb.setPosition(RobotConstants.LEFT_RAISE_CLIMB_POSITION_DEACTIVE);
     }

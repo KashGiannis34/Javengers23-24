@@ -80,7 +80,7 @@ public class AutoRedHumanPlayer extends LinearOpMode {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(52.5, -40), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(54, -40), velConPixel, accConPixel)
 //                    .splineToConstantHeading(new Vector2d(51.5, -35.5), Math.toRadians(270), velConPixel, accConPixel) //removed spline traj
                     .waitSeconds(1)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
@@ -91,7 +91,7 @@ public class AutoRedHumanPlayer extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineToConstantHeading(new Vector2d(49.5, -42), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineToConstantHeading(new Vector2d(51, -42), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
@@ -122,7 +122,7 @@ public class AutoRedHumanPlayer extends LinearOpMode {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(52.5, -32), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(55, -34), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -131,7 +131,7 @@ public class AutoRedHumanPlayer extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineToConstantHeading(new Vector2d(49.5, -32), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineToConstantHeading(new Vector2d(53, -34), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
@@ -160,7 +160,7 @@ public class AutoRedHumanPlayer extends LinearOpMode {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(52.5, -45), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(54, -40), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -169,7 +169,7 @@ public class AutoRedHumanPlayer extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineToConstantHeading(new Vector2d(49.5, -45), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineToConstantHeading(new Vector2d(51, -40), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();

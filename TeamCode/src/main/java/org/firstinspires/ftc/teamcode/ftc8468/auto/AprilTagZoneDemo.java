@@ -19,13 +19,14 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.ftc8468.test.camera;
+package org.firstinspires.ftc.teamcode.ftc8468.auto;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.ftc8468.auto.old.AprilTagDetectionPipeline;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 
 //@TeleOp
 @Autonomous
-public class AprilTagDemo extends LinearOpMode
+public class AprilTagZoneDemo extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -57,9 +58,14 @@ public class AprilTagDemo extends LinearOpMode
     int numFramesWithoutDetection = 0;
 
     final float DECIMATION_HIGH = 3;
-    final float DECIMATION_LOW = 2;
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
-    final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
+    int TARGET_ID = 4;
+    boolean gamepadXisPressed = false;
+    boolean gamepadBisPressed = false;
+    int action = -1;
+    int index = 0;
+
+    double headingPower = 0;
 
     @Override
     public void runOpMode()
@@ -67,6 +73,8 @@ public class AprilTagDemo extends LinearOpMode
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "WebcamR"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+
+        RRAutoDrive drive = new RRAutoDrive(hardwareMap);
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -87,7 +95,8 @@ public class AprilTagDemo extends LinearOpMode
         waitForStart();
 
         telemetry.setMsTransmissionInterval(50);
-
+        double heading;
+        double rawHeading;
         while (opModeIsActive())
         {
             // Calling getDetectionsUpdate() will only return an object if there was a new frame
@@ -95,6 +104,39 @@ public class AprilTagDemo extends LinearOpMode
             // enables us to only run logic when there has been a new frame, as opposed to the
             // getLatestDetections() method which will always return an object.
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
+            rawHeading = drive.getPoseEstimate().getHeading();
+            if (rawHeading >= Math.PI)
+                heading = rawHeading-2*Math.PI;
+            else
+                heading = rawHeading;
+
+            if (Math.abs(heading) > 0.04) {
+                if (heading < 0)
+                    headingPower = Range.clip(Math.abs(6 * (heading / (2 * Math.PI))) + Math.abs(9*Math.pow((heading / (2 * Math.PI)),2)), 0.15, 0.5);
+                else
+                    headingPower = -1 * Range.clip(Math.abs(6 * (heading / (2 * Math.PI))) + Math.abs(9*Math.pow((heading / (2 * Math.PI)), 2)), 0.15, 0.5);
+            }
+            else
+                headingPower = 0;
+
+            if (gamepad1.x)
+                gamepadXisPressed = true;
+            if (gamepadXisPressed && !gamepad1.x)
+            {
+                TARGET_ID--;
+                action = -2;
+                gamepadXisPressed = false;
+            }
+
+            if (gamepad1.b)
+                gamepadBisPressed = true;
+            if (gamepadBisPressed && !gamepad1.b)
+            {
+                TARGET_ID++;
+                action = -2;
+                gamepadBisPressed = false;
+            }
+
 
             // If there's been a new frame...
             if(detections != null)
@@ -102,18 +144,17 @@ public class AprilTagDemo extends LinearOpMode
                 telemetry.addData("FPS", camera.getFps());
                 telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
                 telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
+                telemetry.addData("Robot pose: ", drive.getPoseEstimate());
+                telemetry.addData("Action: ", action);
+                telemetry.addData("Target ID: ", TARGET_ID);
+                telemetry.addData("Heading Power: ", headingPower);
+                telemetry.addData("Heading: ", heading);
+                telemetry.addData("Raw Heading: ", rawHeading);
 
                 // If we don't see any tags
                 if(detections.size() == 0)
                 {
-                    numFramesWithoutDetection++;
-
-                    // If we haven't seen a tag for a few frames, lower the decimation
-                    // so we can hopefully pick one up if we're e.g. far back
-                    if(numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION)
-                    {
-                        aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW);
-                    }
+                    drive.setWeightedDrivePower(new Pose2d(0,0,headingPower));
                 }
                 // We do see tags!
                 else
@@ -127,8 +168,10 @@ public class AprilTagDemo extends LinearOpMode
                         aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                     }
 
+                    int curIndex = -1;
                     for(AprilTagDetection detection : detections)
                     {
+                        curIndex++;
                         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
                         telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
                         telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
@@ -136,13 +179,44 @@ public class AprilTagDemo extends LinearOpMode
 //                        telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
 //                        telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
 //                        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+                        if (detection.id == TARGET_ID) {
+                            action = 0;
+                            index = curIndex;
+                        }
+                        if (detection.id < TARGET_ID && action != 0)
+                            action = 1;
+                        if (detection.id > TARGET_ID && action != 0)
+                            action = -1;
                     }
+
+                    if (action == 0) {
+                        if (index < detections.size()) {
+                            if (detections.get(index).pose.x > .1)
+                                drive.setWeightedDrivePower(new Pose2d(0, 0.4, headingPower));
+                            else if (detections.get(index).pose.x < -.1)
+                                drive.setWeightedDrivePower(new Pose2d(0, -0.4, headingPower));
+                            else
+                                drive.setWeightedDrivePower(new Pose2d(0, 0, headingPower));
+                        }
+                        else
+                            drive.setWeightedDrivePower(new Pose2d(0, 0, headingPower));
+                    }
+                    else if (action == -1)
+                    {
+                        drive.setWeightedDrivePower(new Pose2d(0,-0.4, headingPower));
+                    }
+                    else
+                    {
+                        drive.setWeightedDrivePower(new Pose2d(0,0.4, headingPower));
+                    }
+
+
+
+
                 }
-
-                telemetry.update();
+                drive.update();
             }
-
-            sleep(20);
+            telemetry.update();
         }
     }
 }

@@ -205,6 +205,7 @@ public class VR_MainTeleOp extends LinearOpMode {
         }
         if(gamepad2.b) {
             drive.activateLeftRaiseClimbDrone();
+            drive.activateRightRaiseClimbDrone();
             drive.deactivateIntakeServo();
             drive.stopIntake();
         }

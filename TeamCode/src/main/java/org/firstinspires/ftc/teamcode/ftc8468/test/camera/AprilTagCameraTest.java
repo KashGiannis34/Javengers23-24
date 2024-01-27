@@ -24,7 +24,7 @@ package org.firstinspires.ftc.teamcode.ftc8468.test.camera;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.ftc8468.auto.old.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.AprilTagDetectionPipeline;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -73,7 +73,7 @@ public class AprilTagCameraTest extends LinearOpMode
             @Override
             public void onOpened()
             {
-                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(800,448, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override

@@ -19,8 +19,9 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.ftc8468.auto.temp;
+package org.firstinspires.ftc.teamcode.ftc8468.auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -32,8 +33,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-//@Autonomous
-public class AutoCameraBlue extends LinearOpMode
+//@TeleOp
+@Autonomous
+public class AprilTagDemo extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -60,20 +62,25 @@ public class AutoCameraBlue extends LinearOpMode
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode()
+    {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "WebcamR"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         camera.setPipeline(aprilTagDetectionPipeline);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
             @Override
-            public void onOpened() {
+            public void onOpened()
+            {
                 camera.startStreaming(800,448, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override
-            public void onError(int errorCode) {
+            public void onError(int errorCode)
+            {
+
             }
         });
 
@@ -81,7 +88,8 @@ public class AutoCameraBlue extends LinearOpMode
 
         telemetry.setMsTransmissionInterval(50);
 
-        while (opModeIsActive()) {
+        while (opModeIsActive())
+        {
             // Calling getDetectionsUpdate() will only return an object if there was a new frame
             // processed since the last time we called it. Otherwise, it will return null. This
             // enables us to only run logic when there has been a new frame, as opposed to the

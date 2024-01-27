@@ -6,7 +6,7 @@ public class RobotConstants {
 
     public static final float ARM_POSITION_ACTIVE = 1.0f;
     public static final float ARM_POSITION_REST = .47f;
-    public static final float ARM_POSITION_AUTO = .62f;
+    public static final float ARM_POSITION_AUTO = .54f;
     public static final float ARM_POSITION_DEACTIVE= 0.31f;
 
     public static final float LEFT_CLAW_POSITION_ACTIVE = 0.28f;
@@ -27,10 +27,11 @@ public class RobotConstants {
     public static final float RIGHT_CLIMB_POSITION_DEACTIVE= 1.0f;
 
     public static final float RIGHT_RAISE_CLIMB_POSITION_ACTIVE = 0.55f;
+    public static final float RIGHT_RAISE_CLIMB_POSITION_DRONE = 0.80f;
     public static final float RIGHT_RAISE_CLIMB_POSITION_DEACTIVE= 0.92f;
 
     public static final float LEFT_RAISE_CLIMB_POSITION_ACTIVE = 0.88f;
-    public static final float LEFT_RAISE_CLIMB_POSITION_DRONE = 0.62f;
+    public static final float LEFT_RAISE_CLIMB_POSITION_DRONE = 0.68f;
     public static final float LEFT_RAISE_CLIMB_POSITION_DEACTIVE= 0.53f;
 
     public static final float INTAKE_POSITION_ACTIVE = 0.8f;
