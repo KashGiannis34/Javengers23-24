@@ -452,7 +452,7 @@ public class RobotDrive extends MecanumDrive {
     //////////////////////////////////////////
 
     public void activateIntake() {
-        intakeMotor.setPower(.8);
+        intakeMotor.setPower(.9);
     }
     public void reverseIntake() {
         intakeMotor.setPower(-1.0);
