@@ -15,13 +15,13 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class TrajTest {
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(600);
+        MeepMeep meepMeep = new MeepMeep(700);
 
 
         TrajectoryVelocityConstraint velCon = SampleMecanumDrive.getVelocityConstraint(60, 6, 12);
         TrajectoryAccelerationConstraint accCon = SampleMecanumDrive.getAccelerationConstraint(40);
-        TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(60, 6, 12);
-        TrajectoryAccelerationConstraint accConPixel = SampleMecanumDrive.getAccelerationConstraint(40);
+        TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(50, 6, 12);
+        TrajectoryAccelerationConstraint accConPixel = SampleMecanumDrive.getAccelerationConstraint(30);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -41,7 +41,6 @@ public class TrajTest {
                 .setColorScheme(new ColorSchemeBlueLight())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(18, -64, Math.toRadians(90)))
-                                .waitSeconds(10)
                                 .splineToLinearHeading(new Pose2d(10, -31, Math.toRadians(180)), Math.toRadians(180))
                                 .lineToLinearHeading(new Pose2d(48, -30, Math.toRadians(180)), velCon, accCon)
                                 .lineTo(new Vector2d(48, -64), velCon, accCon)
@@ -67,7 +66,6 @@ public class TrajTest {
                 .setColorScheme(new ColorSchemeRedLight())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-42, -64, Math.toRadians(90)))
-                                .waitSeconds(10)
                                 .lineTo(new Vector2d(-36, -30), velCon, accCon) // drive to team prop
                                 .lineTo(new Vector2d(-36, -36), velCon, accCon)
                                 .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(180), velCon, accCon)
@@ -121,19 +119,19 @@ public class TrajTest {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-42, 64, Math.toRadians(270)))
-                                .splineToLinearHeading(new Pose2d(-32, 38, Math.toRadians(340)), Math.toRadians(0), velConPixel, accConPixel)
-                                .lineToLinearHeading(new Pose2d(-40, 34, Math.toRadians(0)), velConPixel, accConPixel)
-                                .lineToLinearHeading(new Pose2d(-40, 10, Math.toRadians(180)), velConPixel, accConPixel)
-                                .lineToConstantHeading(new Vector2d(22, 10), velConPixel, accConPixel)
-//                                .splineToConstantHeading(new Vector2d(52, -42), Math.toRadians(270), velConPixel, accConPixel)
+                        drive.trajectorySequenceBuilder(new Pose2d(-42, -64, Math.toRadians(90)))
+                                .splineToLinearHeading(new Pose2d(-32, -38, Math.toRadians(70)), Math.toRadians(0), velConPixel, accConPixel)
+                                .lineToLinearHeading(new Pose2d(-40, -34, Math.toRadians(0)), velConPixel, accConPixel)
+                                .lineToLinearHeading(new Pose2d(-40, -10, Math.toRadians(180)), velConPixel, accConPixel)
+                                .lineToConstantHeading(new Vector2d(30, -10), velConPixel, accConPixel)
+                                .lineToConstantHeading(new Vector2d(52, -36), velConPixel, accConPixel)
                                 .build()
                 );
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
                 .setDarkMode(false)
                 .setBackgroundAlpha(1f)
-                .addEntity(myBot7)
+                .addEntity(myBot4)
                 .start();
     }
 }
