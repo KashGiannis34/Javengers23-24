@@ -641,6 +641,12 @@ public class RRAutoDrive extends SampleMecanumDrive {
     public void activateIntakeServo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_ACTIVE);
     }
+    public void activateIntakeServoFive() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_FIVE);
+    }
+    public void activateIntakeServoFour() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_FOUR);
+    }
     public void deactivateIntakeServo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_REST);
     }

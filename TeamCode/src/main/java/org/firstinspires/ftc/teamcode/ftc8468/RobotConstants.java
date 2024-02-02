@@ -34,6 +34,8 @@ public class RobotConstants {
     public static final float LEFT_RAISE_CLIMB_POSITION_DRONE = 0.68f;
     public static final float LEFT_RAISE_CLIMB_POSITION_DEACTIVE= 0.53f;
 
+    public static final float INTAKE_POSITION_FIVE = 0.77f;
+    public static final float INTAKE_POSITION_FOUR = 0.81f;
     public static final float INTAKE_POSITION_ACTIVE = 0.8f;
     public static final float INTAKE_POSITION_REST = 0.59f;
 

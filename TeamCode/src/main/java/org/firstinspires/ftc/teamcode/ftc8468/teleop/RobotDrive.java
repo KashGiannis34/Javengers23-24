@@ -452,7 +452,7 @@ public class RobotDrive extends MecanumDrive {
     //////////////////////////////////////////
 
     public void activateIntake() {
-        intakeMotor.setPower(.9);
+        intakeMotor.setPower(1.0);
     }
     public void reverseIntake() {
         intakeMotor.setPower(-1.0);
@@ -582,6 +582,11 @@ public class RobotDrive extends MecanumDrive {
     public void stopLift() {
         liftMotorL.setPower(0);
         liftMotorR.setPower(0);
+    }
+
+    public void moveLift(double power) {
+        liftMotorR.setPower(power);
+        liftMotorL.setPower(-power);
     }
 
     public boolean isLiftSensorTouched() {

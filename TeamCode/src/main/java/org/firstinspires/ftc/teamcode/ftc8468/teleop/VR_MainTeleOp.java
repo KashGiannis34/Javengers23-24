@@ -95,14 +95,6 @@ public class VR_MainTeleOp extends LinearOpMode {
             drive.activateIntakeServo();
         }
 
-//        if(gamepad1.b){
-//            if(!isLiftActivated) {
-//                drive.deactivateArm();
-////                isArmUp = false;
-//                drive.deactivateLeftClaw();
-//                drive.deactivateRightClaw();
-//            }
-//        }
         if((gamepad1.x) && (isVertSensorTouchedOnce)){
             drive.activateIntake();
             drive.deactivateIntakeServo();
@@ -133,7 +125,7 @@ public class VR_MainTeleOp extends LinearOpMode {
         if ((gamepad1.dpad_up) && (isBottomReached || isVertSensorTouchedOnce)) {
             if (!isLiftActivated) {
                 //drive.reverseIntake();
-                drive.activateLift(800);
+                drive.activateLift(850);
                 drive.activateArm();
                 drive.stopIntake();
 //                isArmUp = true;
@@ -161,7 +153,6 @@ public class VR_MainTeleOp extends LinearOpMode {
 
             }
         }
-
 
         if (gamepad1.dpad_down) {
             if (isLiftActivated) {
@@ -210,11 +201,11 @@ public class VR_MainTeleOp extends LinearOpMode {
             drive.stopIntake();
         }
 
-        if(gamepad2.dpad_down) {
-            drive.restArm();
-            drive.downLift();
-            drive.activateIntakeServo();
-        }
+//        if(gamepad2.dpad_down) {
+//            drive.restArm();
+//            drive.downLift();
+//            drive.activateIntakeServo();
+//        }
 
         telemetry.addData("isBottomReached: ", isBottomReached);
         telemetry.addData("isLiftActivated: ", isLiftActivated);
