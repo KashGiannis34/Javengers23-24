@@ -56,7 +56,7 @@ public class AutoBlueBackdrop extends LinearOpMode {
             trajSeqCenter = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
                     {
-                        drive.restArmAuto();
+                        drive.initArm();
                         drive.deactivateIntakeServo();
                     })
                     .lineTo(new Vector2d(18, 30), velConPixel, accConPixel)
@@ -65,17 +65,17 @@ public class AutoBlueBackdrop extends LinearOpMode {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(54, 34, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToLinearHeading(new Pose2d(55, 31, Math.toRadians(180)), velConPixel, accConPixel)
                     .waitSeconds(1)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
+                    .lineTo(new Vector2d(50, 31), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addTemporalMarkerOffset(1, () ->
                     {
                         drive.restArm();
                     })
-                    .lineTo(new Vector2d(53, 34), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
@@ -86,7 +86,7 @@ public class AutoBlueBackdrop extends LinearOpMode {
             trajSeqRight = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
                     {
-                        drive.restArmAuto();
+                        drive.initArm();
                         drive.deactivateIntakeServo();
                     })
                     .splineToLinearHeading(new Pose2d(8, 31, Math.toRadians(180)), Math.toRadians(180), velConPixel, accConPixel)
@@ -95,17 +95,17 @@ public class AutoBlueBackdrop extends LinearOpMode {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(54.8, 29.5, Math.toRadians(180)), velCon, accCon)
+                    .lineToLinearHeading(new Pose2d(55, 25.5, Math.toRadians(180)), velCon, accCon)
                     .waitSeconds(1)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
+                    .lineTo(new Vector2d(50, 25.5), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addTemporalMarkerOffset(1, () ->
                     {
                         drive.restArm();
                     })
-                    .lineTo(new Vector2d(53.8, 29.5), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
@@ -116,7 +116,7 @@ public class AutoBlueBackdrop extends LinearOpMode {
             trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
                     {
-                        drive.restArmAuto();
+                        drive.initArm();
                         drive.deactivateIntakeServo();
                     })
                     .lineTo(new Vector2d(24, 38), velConPixel, accConPixel)
@@ -125,17 +125,17 @@ public class AutoBlueBackdrop extends LinearOpMode {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToSplineHeading(new Pose2d(54.4, 39, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToSplineHeading(new Pose2d(55, 39, Math.toRadians(180)), velConPixel, accConPixel)
                     .waitSeconds(1)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
+                    .lineTo(new Vector2d(50, 39), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addTemporalMarkerOffset(1, () ->
                     {
                         drive.restArm();
                     })
-                    .lineTo(new Vector2d(53.4, 39), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
@@ -160,8 +160,10 @@ public class AutoBlueBackdrop extends LinearOpMode {
 
     private void initialize() {
         drive = new RRAutoDrive(hardwareMap);
+        drive.initArm();
         drive.activateLeftClaw();
         drive.activateRightClaw();
+        drive.deactivateIntakeServo();
         telemetry.addData("Status:", "initialize() - Robot and Camera are initialized!");
         telemetry.update();
     }

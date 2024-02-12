@@ -613,6 +613,10 @@ public class RRAutoDrive extends SampleMecanumDrive {
     public void activateArm() {
         arm.setPosition(RobotConstants.ARM_POSITION_ACTIVE);
     }
+    public void initArm() {
+        arm.setPosition(RobotConstants.ARM_POSITION_INIT);
+    }
+
     public void restArm() {
         arm.setPosition(RobotConstants.ARM_POSITION_REST);
     }

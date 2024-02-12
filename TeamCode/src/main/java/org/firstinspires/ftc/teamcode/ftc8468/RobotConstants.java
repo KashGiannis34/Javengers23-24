@@ -7,6 +7,7 @@ public class RobotConstants {
     public static final float ARM_POSITION_ACTIVE = 1.0f;
     public static final float ARM_POSITION_REST = .47f;
     public static final float ARM_POSITION_AUTO = .54f;
+    public static final float ARM_POSITION_INIT = .70f;
     public static final float ARM_POSITION_DEACTIVE= 0.31f;
 
     public static final float LEFT_CLAW_POSITION_ACTIVE = 0.28f;

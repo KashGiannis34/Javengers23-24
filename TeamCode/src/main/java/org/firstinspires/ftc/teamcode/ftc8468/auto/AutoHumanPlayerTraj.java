@@ -18,7 +18,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.ArrayList;
-
+@Disabled
 @Autonomous (name = "TrajTest2HumanPlayer")
 public class AutoHumanPlayerTraj extends LinearOpMode {
     RRAutoDrive drive;

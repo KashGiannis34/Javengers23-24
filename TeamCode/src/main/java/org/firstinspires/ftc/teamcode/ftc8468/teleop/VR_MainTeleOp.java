@@ -153,7 +153,37 @@ public class VR_MainTeleOp extends LinearOpMode {
 
             }
         }
+        if(gamepad1.left_trigger > 0.5) {
+            if (!isLiftActivated) {
 
+                drive.activateLift(1400);
+                drive.activateArm();
+                drive.stopIntake();
+//                isArmUp = true;
+                drive.activateIntakeServo();
+                driveSlow = true;
+                isLiftActivated = true;
+                isBottomReached = false;
+                isVertSensorTouchedOnce = false;
+
+            }
+        }
+
+        if(gamepad1.right_trigger > 0.5) {
+            if (!isLiftActivated) {
+
+                drive.activateLift(1600);
+                drive.activateArm();
+                drive.stopIntake();
+//                isArmUp = true;
+                drive.activateIntakeServo();
+                driveSlow = true;
+                isLiftActivated = true;
+                isBottomReached = false;
+                isVertSensorTouchedOnce = false;
+
+            }
+        }
         if (gamepad1.dpad_down) {
             if (isLiftActivated) {
                 drive.deactivateLift();
