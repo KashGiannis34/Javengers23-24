@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc8468.auto;
+package org.firstinspires.ftc.teamcode.ftc8468.auto.competitionOpMode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -9,10 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.SplitAveragePipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous (name = "AutoBlueBackdropFARPARK")
-public class AutoBlueBackdropFARPARK extends LinearOpMode {
+@Autonomous (name = "AutoBlueBackdrop")
+public class AutoBlueBackdrop extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "blue";
 
@@ -76,12 +79,12 @@ public class AutoBlueBackdropFARPARK extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineTo(new Vector2d(44, 14), velCon, accCon)
+                    .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
-                    .lineTo(new Vector2d(60, 14), velCon, accCon)
+                    .lineTo(new Vector2d(60, 62), velCon, accCon)
                     .build();
             trajSeqRight = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
@@ -106,12 +109,12 @@ public class AutoBlueBackdropFARPARK extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineTo(new Vector2d(44, 14), velCon, accCon)
+                    .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
-                    .lineTo(new Vector2d(60, 14), velCon, accCon)
+                    .lineTo(new Vector2d(60, 62), velCon, accCon)
                     .build();
             trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
@@ -136,12 +139,12 @@ public class AutoBlueBackdropFARPARK extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineTo(new Vector2d(44, 14), velCon, accCon)
+                    .lineTo(new Vector2d(44, 62), velCon, accCon)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
-                    .lineTo(new Vector2d(60, 14), velCon, accCon)
+                    .lineTo(new Vector2d(60, 62), velCon, accCon)
                     .build();
         }
         else {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc8468.auto;
+package org.firstinspires.ftc.teamcode.ftc8468.auto.competitionOpMode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -10,12 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.SplitAveragePipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Disabled
-@Autonomous (name = "AutoBlueHumanPlayer")
-public class AutoBlueHumanPlayer extends LinearOpMode {
+@Autonomous (name = "AutoRedHumanPlayer")
+public class AutoRedHumanPlayer extends LinearOpMode {
     RRAutoDrive drive;
-    String curAlliance = "blue";
+    String curAlliance = "red";
 
     private TeamElementSubsystem teamElementDetection;
 
@@ -32,7 +35,7 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
     {
         initialize();
 
-        teamElementDetection = new TeamElementSubsystem(hardwareMap, SplitAveragePipeline.ZONE_VIEW.RIGHT);
+        teamElementDetection = new TeamElementSubsystem(hardwareMap, SplitAveragePipeline.ZONE_VIEW.LEFT);
         while (!isStarted() && !isStopRequested())
         {
             zone = teamElementDetection.getElementZoneValue(telemetry);
@@ -49,8 +52,8 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
             telemetry.update();
         }
 
-        if (curAlliance == "blue") {
-            Pose2d startPose = new Pose2d(-42, 64, Math.toRadians(270));
+        if (curAlliance == "red") {
+            Pose2d startPose = new Pose2d(-42, -64, Math.toRadians(90));
 
             drive.setPoseEstimate(startPose);
 
@@ -63,25 +66,25 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
                     // spline traj
 //                    .lineTo(new Vector2d(-39, -30), velConPixel, accConPixel) // drive to team prop
 //                    .lineTo(new Vector2d(-39, -36), velConPixel, accConPixel)
-//                    .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(\180), velConPixel, accConPixel)
+//                    .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(180), velConPixel, accConPixel)
 //                    .lineTo(new Vector2d(-52, -42), velConPixel, accConPixel)
 //                    .splineToConstantHeading(new Vector2d(-56, -36), Math.toRadians(90), velConPixel, accConPixel)
 //                    .lineTo(new Vector2d(-56, -16), velConPixel, accConPixel)
 //                    .splineToConstantHeading(new Vector2d(-52, -10), Math.toRadians(0), velConPixel, accConPixel)
 //                    .lineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), velConPixel, accConPixel)
 //                    .lineTo(new Vector2d(30, -10), velConPixel, accConPixel)
-                    .lineToConstantHeading(new Vector2d(-39, 30), velConPixel, accConPixel) // no-spline traj
-                    .lineToConstantHeading(new Vector2d(-39, 42), velConPixel, accConPixel)
-                    .lineToConstantHeading(new Vector2d(-56, 42), velConPixel, accConPixel)
-                    .lineToConstantHeading(new Vector2d(-56, 10), velConPixel, accConPixel)
-                    .lineToSplineHeading(new Pose2d(-24, 10, Math.toRadians(180)), velConPixel, accConPixel)
-                    .lineToConstantHeading(new Vector2d(22, 10), velConPixel,accConPixel)
+                    .lineToConstantHeading(new Vector2d(-39, -30), velConPixel, accConPixel) // no-spline traj
+                    .lineToConstantHeading(new Vector2d(-39, -42), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(-56, -42), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(-56, -10), velConPixel, accConPixel)
+                    .lineToSplineHeading(new Pose2d(-24, -10, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(22, -10), velConPixel,accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(24, () ->
                     {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(52, 42), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(54, -40), velConPixel, accConPixel)
 //                    .splineToConstantHeading(new Vector2d(51.5, -35.5), Math.toRadians(270), velConPixel, accConPixel) //removed spline traj
                     .waitSeconds(1)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
@@ -92,13 +95,13 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineToConstantHeading(new Vector2d(49.5, 42), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineToConstantHeading(new Vector2d(51, -42), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
                     .build();
-            trajSeqRight = drive.trajectorySequenceBuilder(startPose)
+            trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
                     // spline path
 //                    .lineToLinearHeading(new Pose2d(-42, -34, Math.toRadians(120)), velConPixel, accConPixel)
 //                    .lineTo(new Vector2d(-36, -34), velConPixel, accConPixel)
@@ -113,17 +116,17 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
                         drive.restArmAuto();
                         drive.deactivateIntakeServo();
                     })
-                    .lineToLinearHeading(new Pose2d(-42, 34, Math.toRadians(240)), velConPixel, accConPixel)
+                    .lineToLinearHeading(new Pose2d(-42, -34, Math.toRadians(120)), velConPixel, accConPixel)
 //                    .lineToConstantHeading(new Vector2d(-36, -34), velConPixel, accConPixel)
-                    .lineToSplineHeading(new Pose2d(-35.5, 34, Math.toRadians(180)), velConPixel, accConPixel)
-                    .lineToConstantHeading(new Vector2d(-32, 10), velConPixel, accConPixel)
-                    .lineToConstantHeading(new Vector2d(22, 10), velConPixel, accConPixel)
+                    .lineToSplineHeading(new Pose2d(-35.5, -34, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(-32, -10), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(22, -10), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(24, () ->
                     {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(52, 32), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(55, -34), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -132,13 +135,13 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineToConstantHeading(new Vector2d(49.5, 32), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineToConstantHeading(new Vector2d(53, -34), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();
                     })
                     .build();
-            trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
+            trajSeqRight = drive.trajectorySequenceBuilder(startPose)
                     // spline path
 //                    .splineToLinearHeading(new Pose2d(-32, -34, Math.toRadians(0)), Math.toRadians(0), velConPixel, accConPixel)
 //                    .lineTo(new Vector2d(-36, -34), velConPixel, accConPixel)
@@ -152,16 +155,16 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
                         drive.restArmAuto();
                         drive.deactivateIntakeServo();
                     })
-                    .splineToLinearHeading(new Pose2d(-32, 38, Math.toRadians(340)), Math.toRadians(0), velConPixel, accConPixel)
-                    .lineToLinearHeading(new Pose2d(-40, 34, Math.toRadians(0)), velConPixel, accConPixel)
-                    .lineToLinearHeading(new Pose2d(-40, 10, Math.toRadians(180)), velConPixel, accConPixel)
-                    .lineToConstantHeading(new Vector2d(22, 10), velConPixel, accConPixel)
+                    .splineToLinearHeading(new Pose2d(-32, -38, Math.toRadians(20)), Math.toRadians(0), velConPixel, accConPixel)
+                    .lineToLinearHeading(new Pose2d(-40, -34, Math.toRadians(0)), velConPixel, accConPixel)
+                    .lineToLinearHeading(new Pose2d(-40, -10, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(22, -10), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(24, () ->
                     {
                         drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(52, 45), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(54, -40), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -170,7 +173,7 @@ public class AutoBlueHumanPlayer extends LinearOpMode {
                     {
                         drive.restArm();
                     })
-                    .lineToConstantHeading(new Vector2d(49.5, 45), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineToConstantHeading(new Vector2d(51, -40), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                         drive.activateIntakeServo();

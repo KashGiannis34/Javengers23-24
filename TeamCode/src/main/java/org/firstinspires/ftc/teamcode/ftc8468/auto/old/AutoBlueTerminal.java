@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
-import org.firstinspires.ftc.teamcode.ftc8468.auto.TeamElementSubsystem;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
 
 @Autonomous
 public class AutoBlueTerminal extends LinearOpMode {

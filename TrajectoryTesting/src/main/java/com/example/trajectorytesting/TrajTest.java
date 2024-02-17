@@ -116,24 +116,27 @@ public class TrajTest {
                                 .build()
                 );
 
-        RoadRunnerBotEntity myBot7 = new DefaultBotBuilder(meepMeep)
+        RoadRunnerBotEntity myBotStackTest = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-42, 64, Math.toRadians(270)))
-                                .splineToLinearHeading(new Pose2d(-32, 38, Math.toRadians(340)), Math.toRadians(0), velConPixel, accConPixel)
-                                .lineToLinearHeading(new Pose2d(-40, 34, Math.toRadians(0)), velConPixel, accConPixel)
-                                .lineToLinearHeading(new Pose2d(-40, 10, Math.toRadians(180)), velConPixel, accConPixel)
-                                .lineToConstantHeading(new Vector2d(22, 10), velConPixel, accConPixel)
-//                                .splineToConstantHeading(new Vector2d(52, -42), Math.toRadians(270), velConPixel, accConPixel)
+                        drive.trajectorySequenceBuilder(new Pose2d(18, -64, Math.toRadians(90)))
+                                .lineTo(new Vector2d(18, -30), velConPixel, accConPixel)
+                                .lineToLinearHeading(new Pose2d(56.25, -36, Math.toRadians(180)), velConPixel, accConPixel)
+                                .lineTo(new Vector2d(53, -37))
+                                .lineToConstantHeading(new Vector2d(30, -10))
+                                .lineToLinearHeading(new Pose2d(-53, 5, Math.toRadians(215)), velConPixel, accConPixel)
+                                .waitSeconds(3)
+                                .lineToSplineHeading(new Pose2d(-47, 5-20.0/83.0*6.0, Math.toRadians(180)), velConPixel, accConPixel)
+                                .lineToConstantHeading(new Vector2d(30, -15), velConPixel, accConPixel)
                                 .build()
                 );
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
                 .setDarkMode(false)
                 .setBackgroundAlpha(1f)
-                .addEntity(myBot7)
+                .addEntity(myBotStackTest)
                 .start();
     }
 }

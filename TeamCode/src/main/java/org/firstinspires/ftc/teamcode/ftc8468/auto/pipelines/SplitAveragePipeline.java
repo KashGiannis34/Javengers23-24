@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc8468.auto;
+package org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -90,7 +90,7 @@ public class SplitAveragePipeline extends OpenCvPipeline {
         // Default position is also 3
         if (zoneView == ZONE_VIEW.LEFT) {
             if ((distance1 > 195) && (distance2 > 190)) {
-                color_zone = ZONE.RIGHT; // Left
+                color_zone = ZONE.RIGHT;
                 max_distance = -1;
             } else {
                 max_distance = Math.min(distance1, distance2);

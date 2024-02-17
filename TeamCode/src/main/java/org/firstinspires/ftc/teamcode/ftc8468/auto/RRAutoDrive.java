@@ -609,6 +609,9 @@ public class RRAutoDrive extends SampleMecanumDrive {
     public void deactivateIntake() {
         intakeMotor.setPower(0);
     }
+    public void reverseIntake() {
+        intakeMotor.setPower(-1.0);
+    }
 
     public void activateArm() {
         arm.setPosition(RobotConstants.ARM_POSITION_ACTIVE);

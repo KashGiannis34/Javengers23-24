@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc8468.auto;
+package org.firstinspires.ftc.teamcode.ftc8468.auto.competitionOpMode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.SplitAveragePipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous (name = "AutoRedBackdrop")
@@ -21,7 +24,7 @@ public class AutoRedBackdrop extends LinearOpMode {
     private int liftMotorTicks = 425;
 
     SplitAveragePipeline.ZONE zone = SplitAveragePipeline.ZONE.RIGHT;
-    TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight;
+    TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight, trajSeqStack;
     TrajectoryVelocityConstraint velCon = SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
     TrajectoryAccelerationConstraint accCon = SampleMecanumDrive.getAccelerationConstraint(40);
     TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);

@@ -37,7 +37,7 @@ public class RobotConstants {
 
     public static final float INTAKE_POSITION_FIVE = 0.77f;
     public static final float INTAKE_POSITION_FOUR = 0.81f;
-    public static final float INTAKE_POSITION_ACTIVE = 0.8f;
+    public static final float INTAKE_POSITION_ACTIVE = 0.815f;
     public static final float INTAKE_POSITION_REST = 0.59f;
 
 //    public static final float DRONE_POSITION_ACTIVE = 0.75f;
