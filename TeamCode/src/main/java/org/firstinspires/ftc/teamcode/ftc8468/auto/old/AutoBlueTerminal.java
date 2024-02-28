@@ -4,12 +4,14 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
 
 @Autonomous
+@Disabled
 public class AutoBlueTerminal extends LinearOpMode {
     // "blue" for Blue and "red" for Red Alliance
     String ALLIANCE = "blue";

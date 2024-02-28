@@ -67,7 +67,6 @@ public class TrajTest {
                 .setColorScheme(new ColorSchemeRedLight())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-42, -64, Math.toRadians(90)))
-                                .waitSeconds(10)
                                 .lineTo(new Vector2d(-36, -30), velCon, accCon) // drive to team prop
                                 .lineTo(new Vector2d(-36, -36), velCon, accCon)
                                 .splineToConstantHeading(new Vector2d(-42, -42), Math.toRadians(180), velCon, accCon)
@@ -136,7 +135,7 @@ public class TrajTest {
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
                 .setDarkMode(false)
                 .setBackgroundAlpha(1f)
-                .addEntity(myBotStackTest)
+                .addEntity(myBot4)
                 .start();
     }
 }

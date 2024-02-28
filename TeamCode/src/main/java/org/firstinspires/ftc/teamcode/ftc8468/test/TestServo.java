@@ -12,7 +12,7 @@ public class TestServo extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Change deviceName to test other servos
-        Servo servo = hardwareMap.get(Servo.class, "intakeServo");
+        Servo servo = hardwareMap.get(Servo.class, "armServo");
         ElapsedTime elapsedTime = new ElapsedTime();
 
         waitForStart();

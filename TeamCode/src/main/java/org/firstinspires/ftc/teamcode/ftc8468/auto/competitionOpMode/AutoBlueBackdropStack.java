@@ -16,14 +16,14 @@ import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsyste
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous (name = "AutoRedBackdropStack")
-public class AutoRedBackdropStack extends LinearOpMode {
+@Autonomous (name = "AutoBlueBackdropStack")
+public class AutoBlueBackdropStack extends LinearOpMode {
     RRAutoDrive drive;
-    String curAlliance = "red";
+    String curAlliance = "blue";
 
     private TeamElementSubsystem teamElementDetection;
 
-    private int liftMotorTicks = 400;
+    private int liftMotorTicks = 390;
 
     SplitAveragePipeline.ZONE zone = SplitAveragePipeline.ZONE.RIGHT;
     public TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight, trajSeqStackDrive;
@@ -37,7 +37,7 @@ public class AutoRedBackdropStack extends LinearOpMode {
     {
         initialize();
 
-        teamElementDetection = new TeamElementSubsystem(hardwareMap, SplitAveragePipeline.ZONE_VIEW.RIGHT);
+        teamElementDetection = new TeamElementSubsystem(hardwareMap, SplitAveragePipeline.ZONE_VIEW.LEFT);
         while (!isStarted() && !isStopRequested())
         {
             zone = teamElementDetection.getElementZoneValue(telemetry);
@@ -54,8 +54,8 @@ public class AutoRedBackdropStack extends LinearOpMode {
             telemetry.update();
         }
 
-        if (curAlliance == "red") {
-            Pose2d startPose = new Pose2d(18, -64, Math.toRadians(90));
+        if (curAlliance == "blue") {
+            Pose2d startPose = new Pose2d(18, 64, Math.toRadians(270));
 
             drive.setPoseEstimate(startPose);
 
@@ -66,18 +66,18 @@ public class AutoRedBackdropStack extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.activateLift(liftMotorTicks);
                     })
-                    .lineTo(new Vector2d(18, -32), velConPixel, accConPixel)
+                    .lineTo(new Vector2d(18, 32), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(0, () ->
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(55.25, -36.25, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .lineToLinearHeading(new Pose2d(54.75, 32, Math.toRadians(180)), velConBackdrop, accConBackdrop)
                     .waitSeconds(1)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
-                    .lineTo(new Vector2d(51, -36.25), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineTo(new Vector2d(51.75, 32), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0, () ->
                     {
                         drive.restArmAuto();
@@ -87,37 +87,7 @@ public class AutoRedBackdropStack extends LinearOpMode {
                     {
                         drive.deactivateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(30, -10), velConPixel, accConPixel)
-                    .build();
-            trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
-                    .addTemporalMarker(() ->
-                    {
-                        drive.initArm();
-                        drive.deactivateIntakeServo();
-                        drive.activateLift(liftMotorTicks);
-                    })
-                    .splineToLinearHeading(new Pose2d(10, -30, Math.toRadians(180)), Math.toRadians(180), velConPixel, accConPixel)
-                    .UNSTABLE_addDisplacementMarkerOffset(0, () ->
-                    {
-                        drive.activateArm();
-                    })
-                    .lineToLinearHeading(new Pose2d(55.25, -31, Math.toRadians(180)), velConBackdrop, accConBackdrop)
-                    .waitSeconds(1)
-                    .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
-                        drive.deactivateRightClaw();
-                        drive.deactivateLeftClaw();
-                    })
-                    .lineTo(new Vector2d(51, -31), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
-                    .UNSTABLE_addDisplacementMarkerOffset(0, () ->
-                    {
-                        drive.restArmAuto();
-                        drive.deactivateLift();
-                    })
-                    .UNSTABLE_addDisplacementMarkerOffset(15, () ->
-                    {
-                        drive.deactivateArm();
-                    })
-                    .lineToConstantHeading(new Vector2d(30, -10), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(30, 10), velConPixel, accConPixel)
                     .build();
             trajSeqRight = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
@@ -126,18 +96,18 @@ public class AutoRedBackdropStack extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.activateLift(liftMotorTicks);
                     })
-                    .lineTo(new Vector2d(25, -38), velConPixel, accConPixel)
+                    .splineToLinearHeading(new Pose2d(10, 30, Math.toRadians(180)), Math.toRadians(180), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(0, () ->
                     {
                         drive.activateArm();
                     })
-                    .lineToSplineHeading(new Pose2d(55.25, -40.5, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .lineToLinearHeading(new Pose2d(54.75, 28, Math.toRadians(180)), velConBackdrop, accConBackdrop)
                     .waitSeconds(1)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
-                    .lineTo(new Vector2d(51, -40.5), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .lineTo(new Vector2d(51.75, 28), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
                     .UNSTABLE_addDisplacementMarkerOffset(0, () ->
                     {
                         drive.restArmAuto();
@@ -147,14 +117,44 @@ public class AutoRedBackdropStack extends LinearOpMode {
                     {
                         drive.deactivateArm();
                     })
-                    .lineToConstantHeading(new Vector2d(30, -10), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(30, 10), velConPixel, accConPixel)
+                    .build();
+            trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
+                    .addTemporalMarker(() ->
+                    {
+                        drive.initArm();
+                        drive.deactivateIntakeServo();
+                        drive.activateLift(liftMotorTicks);
+                    })
+                    .lineTo(new Vector2d(23.5, 42), velConPixel, accConPixel)
+                    .UNSTABLE_addDisplacementMarkerOffset(0, () ->
+                    {
+                        drive.activateArm();
+                    })
+                    .lineToSplineHeading(new Pose2d(54.75, 40.5, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .waitSeconds(1)
+                    .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
+                        drive.deactivateRightClaw();
+                        drive.deactivateLeftClaw();
+                    })
+                    .lineTo(new Vector2d(51.75, 40.5), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .UNSTABLE_addDisplacementMarkerOffset(0, () ->
+                    {
+                        drive.restArmAuto();
+                        drive.deactivateLift();
+                    })
+                    .UNSTABLE_addDisplacementMarkerOffset(15, () ->
+                    {
+                        drive.deactivateArm();
+                    })
+                    .lineToConstantHeading(new Vector2d(30, 10), velConPixel, accConPixel)
                     .build();
             trajSeqStackDrive = drive.trajectorySequenceBuilder(trajSeqCenter.end())
                     .addDisplacementMarker(60, () ->
                     {
                         drive.activateIntake();
                     })
-                    .lineToConstantHeading(new Vector2d(-56, -12.25), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(-55.25, 9), velConPixel, accConPixel)
                     .UNSTABLE_addTemporalMarkerOffset(0, () ->
                     {
                         drive.activateIntakeServo();
@@ -180,7 +180,7 @@ public class AutoRedBackdropStack extends LinearOpMode {
                         drive.activateLift(liftMotorTicks);
                         drive.initArm();
                     })
-                    .lineToConstantHeading(new Vector2d(54, -12.25), velConPixel, accConPixel)
+                    .lineToConstantHeading(new Vector2d(52, 13), velConPixel, accConPixel)
                     .UNSTABLE_addTemporalMarkerOffset(0, () ->
                     {
                         drive.activateArm();
@@ -193,10 +193,7 @@ public class AutoRedBackdropStack extends LinearOpMode {
                     .waitSeconds(1)
                     .UNSTABLE_addTemporalMarkerOffset(0, () ->
                     {
-                        drive.restArmAuto();
-                    })
-                    .UNSTABLE_addTemporalMarkerOffset(.5, () ->
-                    {
+                        drive.deactivateArm();
                         drive.deactivateLift();
                     })
                     .waitSeconds(1)

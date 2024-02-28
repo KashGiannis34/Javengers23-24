@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc8468.teleop;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.opmode.virtualrobot.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.RobotConstants;
 
@@ -35,6 +37,8 @@ public class RobotDrive extends MecanumDrive {
     protected Servo droneServo;
 
     protected DigitalChannel horizSensorBottom;
+
+    RevColorSensorV3 leftColorSensor, rightColorSensor;
 
     final int LIFT_TOLERANCE = 0;
 
@@ -73,6 +77,15 @@ public class RobotDrive extends MecanumDrive {
     protected VoltageSensor batteryVoltageSensor;
 
     protected float speedMultiplier = 0.3f; //0.93f;
+
+    enum PixelCount
+    {
+        ZERO,
+        ONE,
+        TWO
+    }
+
+    PixelCount pixelCount = PixelCount.ZERO;
     final int VERT_TOLERANCE = 5;
 //    final int HORIZ_TOLERANCE = 20;
 
@@ -117,6 +130,9 @@ public class RobotDrive extends MecanumDrive {
 
         horizSensorBottom = hwMap.get(DigitalChannel.class, "horizTouchBottom");
         horizSensorBottom.setMode(DigitalChannel.Mode.INPUT);
+
+        leftColorSensor = hwMap.get(RevColorSensorV3.class, "leftColorSensor");
+        rightColorSensor = hwMap.get(RevColorSensorV3.class, "rightColorSensor");
 
 
 
@@ -614,6 +630,39 @@ public class RobotDrive extends MecanumDrive {
             isBottomReached = true;
         }
         return isBottomReached;
+    }
+
+    public PixelCount getPixelCount()
+    {
+        if (leftColorSensor.getDistance(DistanceUnit.CM) > 1.0 && rightColorSensor.getDistance(DistanceUnit.CM) > 1.0)
+        {
+            pixelCount = PixelCount.ZERO;
+        }
+        else if (leftColorSensor.getDistance(DistanceUnit.CM) <= 1.0 && rightColorSensor.getDistance(DistanceUnit.CM) <= 1.0)
+        {
+            pixelCount = PixelCount.TWO;
+        }
+        else
+        {
+            pixelCount = PixelCount.ONE;
+        }
+        return pixelCount;
+    }
+
+    public boolean leftPixelContained()
+    {
+        if (leftColorSensor.getDistance(DistanceUnit.CM) <= 1.0)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean rightPixelContained()
+    {
+        if (rightColorSensor.getDistance(DistanceUnit.CM) <= 1.0)
+            return true;
+        else
+            return false;
     }
 
 }

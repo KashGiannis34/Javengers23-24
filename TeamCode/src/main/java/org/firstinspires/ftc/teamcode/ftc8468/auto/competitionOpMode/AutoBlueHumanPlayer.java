@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.SplitAveragePipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+@Autonomous (name = "AutoBlueHPCenter")
 @Disabled
-@Autonomous (name = "AutoBlueHumanPlayer")
 public class AutoBlueHumanPlayer extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "blue";

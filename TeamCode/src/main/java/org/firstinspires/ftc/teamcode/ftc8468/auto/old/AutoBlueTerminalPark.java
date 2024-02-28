@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ftc8468.auto.old;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 
 @Autonomous
+@Disabled
 public class AutoBlueTerminalPark extends LinearOpMode {
     RRAutoDrive drive;
     private static int position = 0;

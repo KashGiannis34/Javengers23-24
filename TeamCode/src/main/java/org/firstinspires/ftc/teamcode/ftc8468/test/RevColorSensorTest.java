@@ -13,11 +13,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Autonomous(name = "Sensor: ColorRev", group = "Sensor")
 public class RevColorSensorTest extends LinearOpMode {
 
-    RevColorSensorV3 colorSensor;
+    RevColorSensorV3 colorSensor, colorSensor2;
 
     @Override public void runOpMode() {
         final float[] hsvValues = new float[3];
-        colorSensor = hardwareMap.get(RevColorSensorV3.class, "testColorSensor");
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "leftColorSensor");
+        colorSensor2 = hardwareMap.get(RevColorSensorV3.class, "rightColorSensor");
         colorSensor.setGain(2.0f);
 
         waitForStart();
@@ -38,9 +39,8 @@ public class RevColorSensorTest extends LinearOpMode {
                     .addData("Value", "%.3f", hsvValues[2]);
             telemetry.addData("Alpha", "%.3f", colors.alpha);
 
-            if (colorSensor instanceof DistanceSensor) {
-                telemetry.addData("Distance (cm)", "%.3f", ((DistanceSensor) colorSensor).getDistance(DistanceUnit.CM));
-            }
+            telemetry.addData("Distance (cm)", "%.3f", ((DistanceSensor) colorSensor).getDistance(DistanceUnit.CM));
+            telemetry.addData("Distance2 (cm)", "%.3f", ((DistanceSensor) colorSensor2).getDistance(DistanceUnit.CM));
 
             telemetry.update();
         }
