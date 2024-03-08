@@ -17,8 +17,8 @@ public class RevColorSensorTest extends LinearOpMode {
 
     @Override public void runOpMode() {
         final float[] hsvValues = new float[3];
-        colorSensor = hardwareMap.get(RevColorSensorV3.class, "leftColorSensor");
-        colorSensor2 = hardwareMap.get(RevColorSensorV3.class, "rightColorSensor");
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "leftAutoSensor");
+        colorSensor2 = hardwareMap.get(RevColorSensorV3.class, "rightAutoSensor");
         colorSensor.setGain(2.0f);
 
         waitForStart();
@@ -39,8 +39,8 @@ public class RevColorSensorTest extends LinearOpMode {
                     .addData("Value", "%.3f", hsvValues[2]);
             telemetry.addData("Alpha", "%.3f", colors.alpha);
 
-            telemetry.addData("Distance (cm)", "%.3f", ((DistanceSensor) colorSensor).getDistance(DistanceUnit.CM));
-            telemetry.addData("Distance2 (cm)", "%.3f", ((DistanceSensor) colorSensor2).getDistance(DistanceUnit.CM));
+            telemetry.addData("Distance (cm)", "%.3f", ((DistanceSensor) colorSensor).getDistance(DistanceUnit.MM));
+            telemetry.addData("Distance2 (cm)", "%.3f", ((DistanceSensor) colorSensor2).getDistance(DistanceUnit.MM));
 
             telemetry.update();
         }

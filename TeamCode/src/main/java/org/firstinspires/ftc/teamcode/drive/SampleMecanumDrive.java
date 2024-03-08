@@ -148,6 +148,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
+    public void breakFollowing() {
+        trajectorySequenceRunner.breakFollowing();
+    }
+
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }

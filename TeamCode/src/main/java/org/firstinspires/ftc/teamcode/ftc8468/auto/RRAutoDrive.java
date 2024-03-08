@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc8468.auto;
 
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,9 +10,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.RobotConstants;
-
+import org.firstinspires.ftc.teamcode.ftc8468.teleop.RobotDrive;
 
 
 public class RRAutoDrive extends SampleMecanumDrive {
@@ -30,6 +34,19 @@ public class RRAutoDrive extends SampleMecanumDrive {
     protected DigitalChannel horizSensorBottom;
 
     final int LIFT_TOLERANCE = 0;
+
+    RevColorSensorV3 leftColorSensor, rightColorSensor;
+
+    public enum PixelCount
+    {
+        ZERO,
+        ONE,
+        TWO
+    }
+
+    RRAutoDrive.PixelCount pixelCount = RRAutoDrive.PixelCount.ZERO;
+
+    private ElapsedTime elapsedTime;
 
 
     ///////////////////////////
@@ -143,6 +160,9 @@ public class RRAutoDrive extends SampleMecanumDrive {
         liftMotorL = hwMap.get(DcMotorEx.class, "liftMotorL");
         liftMotorR = hwMap.get(DcMotorEx.class, "liftMotorR");
 
+        leftColorSensor = hwMap.get(RevColorSensorV3.class, "leftColorSensor");
+        rightColorSensor = hwMap.get(RevColorSensorV3.class, "rightColorSensor");
+
         liftMotorR.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         liftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotorR.setDirection(DcMotor.Direction.REVERSE);
@@ -154,6 +174,8 @@ public class RRAutoDrive extends SampleMecanumDrive {
         if(LIFT_VELO_PID != null) {
             setLiftPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, LIFT_VELO_PID);
         }
+
+        elapsedTime = new ElapsedTime();
         
 //        super(hwMap);
 //
@@ -655,6 +677,12 @@ public class RRAutoDrive extends SampleMecanumDrive {
     public void activateIntakeServoFour() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_FOUR);
     }
+    public void activateIntakeServoThree() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_THREE);
+    }
+    public void activateIntakeServoTwo() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_TWO);
+    }
     public void deactivateIntakeServo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_REST);
     }
@@ -725,6 +753,54 @@ public class RRAutoDrive extends SampleMecanumDrive {
             isBottomReached = true;
         }
         return isBottomReached;
+    }
+
+    public RRAutoDrive.PixelCount getPixelCount()
+    {
+        if (leftColorSensor.getDistance(DistanceUnit.CM) > 0.7 && rightColorSensor.getDistance(DistanceUnit.CM) > 0.7)
+        {
+            pixelCount = RRAutoDrive.PixelCount.ZERO;
+        }
+        else if (leftColorSensor.getDistance(DistanceUnit.CM) <= 0.7 && rightColorSensor.getDistance(DistanceUnit.CM) <= 0.7)
+        {
+            pixelCount = RRAutoDrive.PixelCount.TWO;
+        }
+        else
+        {
+            pixelCount = RRAutoDrive.PixelCount.ONE;
+        }
+        return pixelCount;
+    }
+
+    public boolean leftPixelContained()
+    {
+        if (leftColorSensor.getDistance(DistanceUnit.CM) <= 0.7)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean rightPixelContained()
+    {
+        if (rightColorSensor.getDistance(DistanceUnit.CM) <= 0.7)
+            return true;
+        else
+            return false;
+    }
+
+    public void resetRuntime()
+    {
+        elapsedTime.reset();
+    }
+
+    public double elapsedMilliseconds()
+    {
+        return elapsedTime.milliseconds();
+    }
+
+    public double elapsedSeconds()
+    {
+        return elapsedTime.seconds();
     }
 
 }

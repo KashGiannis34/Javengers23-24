@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsyste
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous (name = "AutoBlueBackdropStack")
+@Autonomous (name = "AutoBlueBackdropStackOnceCycle")
 public class AutoBlueBackdropStack extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "blue";

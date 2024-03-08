@@ -18,8 +18,8 @@ public class TrajTest {
         MeepMeep meepMeep = new MeepMeep(600);
 
 
-        TrajectoryVelocityConstraint velCon = SampleMecanumDrive.getVelocityConstraint(60, 6, 12);
-        TrajectoryAccelerationConstraint accCon = SampleMecanumDrive.getAccelerationConstraint(40);
+        TrajectoryVelocityConstraint velCon = SampleMecanumDrive.getVelocityConstraint(50, 6, 12);
+        TrajectoryAccelerationConstraint accCon = SampleMecanumDrive.getAccelerationConstraint(25);
         TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(60, 6, 12);
         TrajectoryAccelerationConstraint accConPixel = SampleMecanumDrive.getAccelerationConstraint(40);
 
@@ -124,18 +124,16 @@ public class TrajTest {
                                 .lineTo(new Vector2d(18, -30), velConPixel, accConPixel)
                                 .lineToLinearHeading(new Pose2d(56.25, -36, Math.toRadians(180)), velConPixel, accConPixel)
                                 .lineTo(new Vector2d(53, -37))
-                                .lineToConstantHeading(new Vector2d(30, -10))
-                                .lineToLinearHeading(new Pose2d(-53, 5, Math.toRadians(215)), velConPixel, accConPixel)
-                                .waitSeconds(3)
-                                .lineToSplineHeading(new Pose2d(-47, 5-20.0/83.0*6.0, Math.toRadians(180)), velConPixel, accConPixel)
-                                .lineToConstantHeading(new Vector2d(30, -15), velConPixel, accConPixel)
+//                                .splineToConstantHeading(new Vector2d(49, -23), Math.toRadians(270), velConPixel, accConPixel)
+                                .splineToConstantHeading(new Vector2d(40, -10), Math.toRadians(180), velCon, accCon)
+                                .lineTo(new Vector2d(-54, -10), velConPixel, accConPixel)
                                 .build()
                 );
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
                 .setDarkMode(false)
                 .setBackgroundAlpha(1f)
-                .addEntity(myBot4)
+                .addEntity(myBotStackTest)
                 .start();
     }
 }

@@ -6,22 +6,32 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
-import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.SplitAveragePipeline;
+import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-@Autonomous (name = "AutoBlueHPTruss")
-public class AutoBlueHPTruss extends LinearOpMode {
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+@Autonomous (name = "AutoBlueHPTrussAprilTag")
+public class AutoBlueHPTrussColorSensor extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "blue";
 
     private TeamElementSubsystem teamElementDetection;
 
-    private int liftMotorTicks = 550;
+    private int liftMotorTicks = 440;
 
     SplitAveragePipeline.ZONE zone = SplitAveragePipeline.ZONE.RIGHT;
     TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight;
@@ -30,6 +40,13 @@ public class AutoBlueHPTruss extends LinearOpMode {
     TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
     TrajectoryAccelerationConstraint accConPixel = SampleMecanumDrive.getAccelerationConstraint(15);
 
+    enum State
+    {
+        PATH_FOLLOWING,
+        DETECT_PIXEL
+    }
+
+    State robotState;
     public void runOpMode()
     {
         initialize();
@@ -59,8 +76,9 @@ public class AutoBlueHPTruss extends LinearOpMode {
             trajSeqCenter = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
                     {
-                        drive.restArmAuto();
+                        drive.initArm();
                         drive.deactivateIntakeServo();
+                        drive.activateLift(liftMotorTicks);
                     })
                     .lineToConstantHeading(new Vector2d(-39, 30), velConPixel, accConPixel)
                     .lineToLinearHeading(new Pose2d(-42, 56, Math.toRadians(180)), velConPixel, accConPixel)
@@ -68,30 +86,16 @@ public class AutoBlueHPTruss extends LinearOpMode {
                     .lineTo(new Vector2d(24, 56), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(24, () ->
                     {
-                        drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineTo(new Vector2d(49, 32), velConPixel, accConPixel)
-                    .lineTo(new Vector2d(52, 32), velConPixel, accConPixel)
-                    .waitSeconds(1)
-                    .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
-                        drive.deactivateRightClaw();
-                        drive.deactivateLeftClaw();
-                    })
-                    .lineTo(new Vector2d(50, 32), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
-                    .UNSTABLE_addTemporalMarkerOffset(0, () ->
-                    {
-                        drive.restArmAuto();
-                        drive.activateIntakeServo();
-                        drive.deactivateLift();
-                    })
-                    .lineTo(new Vector2d(58, 50), velConPixel, accConPixel)
+                    .lineTo(new Vector2d(50, 32), velConPixel, accConPixel)
                     .build();
             trajSeqRight = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
                     {
-                        drive.restArmAuto();;
+                        drive.initArm();
                         drive.deactivateIntakeServo();
+                        drive.activateLift(liftMotorTicks);
                     })
                     .lineToLinearHeading(new Pose2d(-42, 34, Math.toRadians(240)), velConPixel, accConPixel)
                     .lineToLinearHeading(new Pose2d(-42, 40, Math.toRadians(270)), velConPixel, accConPixel)
@@ -100,30 +104,16 @@ public class AutoBlueHPTruss extends LinearOpMode {
                     .lineTo(new Vector2d(24, 58), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(24, () ->
                     {
-                        drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineTo(new Vector2d(49, 28), velConPixel, accConPixel)
-                    .lineTo(new Vector2d(52, 28), velConPixel, accConPixel)
-                    .waitSeconds(1)
-                    .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
-                        drive.deactivateRightClaw();
-                        drive.deactivateLeftClaw();
-                    })
-                    .lineTo(new Vector2d(50, 28), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
-                    .UNSTABLE_addTemporalMarkerOffset(0, () ->
-                    {
-                        drive.restArmAuto();
-                        drive.activateIntakeServo();
-                        drive.deactivateLift();
-                    })
-                    .lineTo(new Vector2d(58, 50), velConPixel, accConPixel)
+                    .lineTo(new Vector2d(50, 28), velConPixel, accConPixel)
                     .build();
             trajSeqLeft = drive.trajectorySequenceBuilder(startPose)
                     .addTemporalMarker(() ->
                     {
-                        drive.restArmAuto();;
+                        drive.initArm();
                         drive.deactivateIntakeServo();
+                        drive.activateLift(liftMotorTicks);
                     })
                     .lineToLinearHeading(new Pose2d(-32, 32, Math.toRadians(340)), velConPixel, accConPixel)
                     .lineToLinearHeading(new Pose2d(-39, 42, Math.toRadians(270)), velConPixel, accConPixel)
@@ -132,25 +122,9 @@ public class AutoBlueHPTruss extends LinearOpMode {
                     .lineTo(new Vector2d(24, 58), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(24, () ->
                     {
-                        drive.activateLift(liftMotorTicks);
                         drive.activateArm();
                     })
-                    .lineTo(new Vector2d(49, 37), velConPixel, accConPixel)
-                    .lineTo(new Vector2d(52, 37), velConPixel, accConPixel)
-                    .waitSeconds(1)
-                    .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
-                        drive.deactivateRightClaw();
-                        drive.deactivateLeftClaw();
-                    })
-                    .lineTo(new Vector2d(50, 37), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
-                    .UNSTABLE_addTemporalMarkerOffset(0, () ->
-                    {
-                        drive.restArmAuto();
-                        drive.activateIntakeServo();
-                        drive.deactivateLift();
-                    })
-                    .lineTo(new Vector2d(58, 50), velConPixel, accConPixel)
-
+                    .lineTo(new Vector2d(50, 37), velConPixel, accConPixel)
                     .build();
         }
         else {
@@ -160,11 +134,25 @@ public class AutoBlueHPTruss extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
         if (zone == SplitAveragePipeline.ZONE.LEFT)
-            drive.followTrajectorySequence(trajSeqLeft);
+            drive.followTrajectorySequenceAsync(trajSeqLeft);
         else if (zone == SplitAveragePipeline.ZONE.CENTER)
-            drive.followTrajectorySequence(trajSeqCenter);
+            drive.followTrajectorySequenceAsync(trajSeqCenter);
         else
-            drive.followTrajectorySequence(trajSeqRight);
+            drive.followTrajectorySequenceAsync(trajSeqRight);
+
+        robotState = State.PATH_FOLLOWING;
+
+        while (opModeIsActive() && !isStopRequested())
+        {
+            if (drive.getPoseEstimate().getX() > 49)
+            {
+                drive.breakFollowing();
+                drive.setDrivePower(new Pose2d());
+            }
+
+            drive.update();
+        }
+
     }
 
     private void initialize() {

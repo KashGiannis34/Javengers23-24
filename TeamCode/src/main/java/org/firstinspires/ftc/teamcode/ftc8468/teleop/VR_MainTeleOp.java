@@ -13,7 +13,7 @@ public class VR_MainTeleOp extends LinearOpMode {
     private int shooterTicks = 2475;
     private int shooterTicksEndGame = 2375;
 
-    private boolean overrideAutoClaw = false;
+    private boolean overrideAutoClaw = true;
     private boolean overrideButtonPressed = false;
     boolean bPressed = false;
     boolean climbServoActivated = false;
@@ -100,12 +100,12 @@ public class VR_MainTeleOp extends LinearOpMode {
             drive.activateLeftClaw();
             drive.activateRightClaw();
             drive.stopIntake();
-            drive.activateIntakeServo();
+            drive.deactivateIntakeServo();
         }
 
         if((gamepad1.x) && (isVertSensorTouchedOnce)){
             drive.activateIntake();
-            drive.deactivateIntakeServo();
+            drive.activateIntakeServo();
             drive.deactivateArm();
             drive.deactivateLeftClaw();
             drive.deactivateRightClaw();
@@ -120,6 +120,7 @@ public class VR_MainTeleOp extends LinearOpMode {
                 drive.activateLift(550);
                 drive.activateArm();
                 drive.stopIntake();
+                drive.deactivateIntakeServo();
 //                isArmUp = true;
                 drive.activateIntakeServo();
                 driveSlow = true;
@@ -153,7 +154,7 @@ public class VR_MainTeleOp extends LinearOpMode {
                 drive.activateArm();
                 drive.stopIntake();
 //                isArmUp = true;
-                drive.activateIntakeServo();
+                drive.deactivateIntakeServo();
                 driveSlow = true;
                 isLiftActivated = true;
                 isBottomReached = false;
@@ -169,7 +170,7 @@ public class VR_MainTeleOp extends LinearOpMode {
                 drive.activateArm();
                 drive.stopIntake();
 //                isArmUp = true;
-                drive.activateIntakeServo();
+                drive.deactivateIntakeServo();
                 driveSlow = true;
                 isLiftActivated = true;
                 isBottomReached = false;
@@ -184,7 +185,7 @@ public class VR_MainTeleOp extends LinearOpMode {
                 drive.activateArm();
                 drive.stopIntake();
 //                isArmUp = true;
-                drive.activateIntakeServo();
+                drive.deactivateIntakeServo();
                 driveSlow = true;
                 isLiftActivated = true;
                 isBottomReached = false;
@@ -200,7 +201,7 @@ public class VR_MainTeleOp extends LinearOpMode {
                 drive.activateArm();
                 drive.stopIntake();
 //                isArmUp = true;
-                drive.activateIntakeServo();
+                drive.deactivateIntakeServo();
                 driveSlow = true;
                 isLiftActivated = true;
                 isBottomReached = false;
@@ -237,12 +238,9 @@ public class VR_MainTeleOp extends LinearOpMode {
         if (!climbServoActivated) {
             drive.deactivateLeftClimb();
             drive.deactivateRightClimb();
-            drive.deactivateIntakeServo();
         } else {
             drive.activateLeftClimb();
             drive.activateRightClimb();
-            drive.deactivateIntakeServo();
-            drive.stopIntake();
         }
 
         if(gamepad1.dpad_right) {
@@ -276,27 +274,28 @@ public class VR_MainTeleOp extends LinearOpMode {
                 drive.activateRightClaw();
             if (drive.leftPixelContained() && drive.rightPixelContained()) {
                 drive.stopIntake();
-                if (Math.abs(drive.intakeServo.getPosition() - RobotConstants.INTAKE_POSITION_ACTIVE) <= .001) {
-                    drive.activateIntakeServo();
+                if (Math.abs(drive.intakeServo.getPosition() - RobotConstants.INTAKE_POSITION_REST) > .01) {
+                    drive.deactivateIntakeServo();
                 }
             }
         }
 
-        if (gamepad2.y && !overrideButtonPressed)
-        {
-            overrideButtonPressed = true;
-            if (overrideAutoClaw)
-                overrideAutoClaw = false;
-            else {
-                overrideAutoClaw = true;
-                drive.deactivateRightClaw();
-                drive.deactivateLeftClaw();
-            }
-        }
-        if (!gamepad2.y)
-        {
-            overrideButtonPressed = false;
-        }
+//        if (gamepad2.y && !overrideButtonPressed)
+//        {
+//            overrideButtonPressed = true;
+//            if (overrideAutoClaw)
+//                overrideAutoClaw = false;
+//            else {
+//                overrideAutoClaw = true;
+//                drive.deactivateRightClaw();
+//                drive.deactivateLeftClaw();
+//            }
+//        }
+//        if (!gamepad2.y)
+//        {
+//            overrideButtonPressed = false;
+//        }
+
 //        if(gamepad2.dpad_down) {
 //            drive.restArm();
 //            drive.downLift();

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -19,6 +20,8 @@ public class RobotDrive extends MecanumDrive {
 
     private DcMotorEx liftMotorL;
     private DcMotorEx liftMotorR;
+
+    private ElapsedTime elapsedTime;
 
     private DcMotorEx intakeMotor;
 
@@ -133,6 +136,8 @@ public class RobotDrive extends MecanumDrive {
 
         leftColorSensor = hwMap.get(RevColorSensorV3.class, "leftColorSensor");
         rightColorSensor = hwMap.get(RevColorSensorV3.class, "rightColorSensor");
+
+        elapsedTime = new ElapsedTime();
 
 
 
@@ -634,11 +639,11 @@ public class RobotDrive extends MecanumDrive {
 
     public PixelCount getPixelCount()
     {
-        if (leftColorSensor.getDistance(DistanceUnit.CM) > 1.0 && rightColorSensor.getDistance(DistanceUnit.CM) > 1.0)
+        if (leftColorSensor.getDistance(DistanceUnit.CM) > 0.7 && rightColorSensor.getDistance(DistanceUnit.CM) > 0.7)
         {
             pixelCount = PixelCount.ZERO;
         }
-        else if (leftColorSensor.getDistance(DistanceUnit.CM) <= 1.0 && rightColorSensor.getDistance(DistanceUnit.CM) <= 1.0)
+        else if (leftColorSensor.getDistance(DistanceUnit.CM) <= 0.7 && rightColorSensor.getDistance(DistanceUnit.CM) <= 0.7)
         {
             pixelCount = PixelCount.TWO;
         }
@@ -651,7 +656,7 @@ public class RobotDrive extends MecanumDrive {
 
     public boolean leftPixelContained()
     {
-        if (leftColorSensor.getDistance(DistanceUnit.CM) <= 1.0)
+        if (leftColorSensor.getDistance(DistanceUnit.CM) <= 0.7)
             return true;
         else
             return false;
@@ -659,10 +664,25 @@ public class RobotDrive extends MecanumDrive {
 
     public boolean rightPixelContained()
     {
-        if (rightColorSensor.getDistance(DistanceUnit.CM) <= 1.0)
+        if (rightColorSensor.getDistance(DistanceUnit.CM) <= 0.7)
             return true;
         else
             return false;
+    }
+
+    public void resetRuntime()
+    {
+        elapsedTime.reset();
+    }
+
+    public double elapsedMilliseconds()
+    {
+        return elapsedTime.milliseconds();
+    }
+
+    public double elapsedSeconds()
+    {
+        return elapsedTime.seconds();
     }
 
 }

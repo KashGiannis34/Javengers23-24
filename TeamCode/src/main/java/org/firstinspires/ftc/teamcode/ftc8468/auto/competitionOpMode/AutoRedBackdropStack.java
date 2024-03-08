@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsyste
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous (name = "AutoRedBackdropStack")
+@Autonomous (name = "AutoRedBackdropStackOneCycle")
 public class AutoRedBackdropStack extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "red";
@@ -153,12 +153,9 @@ public class AutoRedBackdropStack extends LinearOpMode {
                     .addDisplacementMarker(60, () ->
                     {
                         drive.activateIntake();
-                    })
-                    .lineToConstantHeading(new Vector2d(-56, -12.25), velConPixel, accConPixel)
-                    .UNSTABLE_addTemporalMarkerOffset(0, () ->
-                    {
                         drive.activateIntakeServo();
                     })
+                    .lineToConstantHeading(new Vector2d(-57, -12.25), velConPixel, accConPixel)
                     .waitSeconds(4)
                     .UNSTABLE_addTemporalMarkerOffset(0, () ->
                     {

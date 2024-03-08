@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@TeleOp(name = "VR_MainTeleOp", group = "ftc8468")
+@TeleOp(name = "VR_MainTeleOp_One_Player", group = "ftc8468")
 public class VR_MainTeleOp_One_Player extends LinearOpMode {
     private double wheelMotorSpeed = 0.7;
     private int shooterTicks = 2475;
