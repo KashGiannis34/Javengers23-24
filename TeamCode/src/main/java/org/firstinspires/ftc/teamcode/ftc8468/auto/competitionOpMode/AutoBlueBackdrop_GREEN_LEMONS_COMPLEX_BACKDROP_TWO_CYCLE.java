@@ -8,18 +8,18 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.RRAutoDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.SplitAveragePipeline;
 import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsystem;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous (name = "AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP")
-public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode {
+@Autonomous (name = "AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP_TWO_CYCLE")
+public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP_TWO_CYCLE extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "blue";
+
+    boolean secondCycle = false;
 
     private TeamElementSubsystem teamElementDetection;
 
@@ -31,20 +31,23 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
         STACK_PATH,
         INTAKE,
         DEPOSIT_1,
-        DEPOSIT_2
+        DEPOSIT_2,
+        PARK
     }
 
     State robotState = State.PATH_RUNNING;
 
     double startTime;
 
-    SplitAveragePipeline.ZONE zone = SplitAveragePipeline.ZONE.RIGHT;
-    public TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight, trajSeqStack, trajSeqDeposit, trajSeqDeposit2;
+    State depositState;
 
-    Vector2d parkVector = new Vector2d(50, 57.75);
+    SplitAveragePipeline.ZONE zone = SplitAveragePipeline.ZONE.RIGHT;
+    public TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight, trajSeqStack, trajSeqDeposit, trajSeqDeposit2, trajSeqPark;
+
+    Vector2d parkVector = new Vector2d(50, 54.75);
     Vector2d parkVector2 = new Vector2d(60, 57.75);
-    TrajectoryVelocityConstraint velConPixel = RRAutoDrive.velCon(42);
-    TrajectoryAccelerationConstraint accConPixel = RRAutoDrive.accCon(30);
+    TrajectoryVelocityConstraint velConPixel = RRAutoDrive.velCon(47);
+    TrajectoryAccelerationConstraint accConPixel = RRAutoDrive.accCon(34);
 
     TrajectoryVelocityConstraint velConPark = RRAutoDrive.velCon(25);
     TrajectoryAccelerationConstraint accConPark = RRAutoDrive.accCon(20);
@@ -81,7 +84,7 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(55, 32, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToLinearHeading(new Pose2d(55.25, 32, Math.toRadians(180)), velConPixel, accConPixel)
                     .UNSTABLE_addTemporalMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -113,7 +116,7 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(55, 28, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToLinearHeading(new Pose2d(55.25, 28, Math.toRadians(180)), velConPixel, accConPixel)
                     .UNSTABLE_addTemporalMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -144,7 +147,7 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(55, 39.75, Math.toRadians(180)), velConPixel, accConPixel)
+                    .lineToLinearHeading(new Pose2d(55.25, 39.75, Math.toRadians(180)), velConPixel, accConPixel)
                     .UNSTABLE_addTemporalMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -172,24 +175,33 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
         waitForStart();
         drive.resetRuntime();
         if (isStopRequested()) return;
-        Pose2d cyclePose;
         if (zone == SplitAveragePipeline.ZONE.LEFT) {
             drive.followTrajectorySequenceAsync(trajSeqLeft);
-            cyclePose = trajSeqLeft.end();
         }
         else if (zone == SplitAveragePipeline.ZONE.CENTER) {
             drive.followTrajectorySequenceAsync(trajSeqCenter);
-            cyclePose = trajSeqCenter.end();
         }
         else {
             drive.followTrajectorySequenceAsync(trajSeqRight);
-            cyclePose = trajSeqRight.end();
         }
 
         while (opModeIsActive() && !isStopRequested())
         {
             if (robotState == State.STACK_PATH)
             {
+                Pose2d cyclePose;
+                if (secondCycle) {
+                    if (depositState == State.DEPOSIT_1) {
+                        cyclePose = trajSeqDeposit.end();
+                    }
+                    else
+                    {
+                        cyclePose = trajSeqDeposit2.end();
+                    }
+                }
+                else
+                    cyclePose = trajSeqCenter.end();
+
                 trajSeqStack = drive.trajectorySequenceBuilder(cyclePose)
                         .addDisplacementMarker(10, () -> {
                             drive.deactivateArm();
@@ -197,13 +209,16 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                         .addDisplacementMarker(15, () -> {
                             drive.deactivateIntakeServo();
                         })
-                        .lineToConstantHeading(new Vector2d(-40, 57.75), velConPixel, accConPixel)
+                        .lineToConstantHeading(new Vector2d(-40, parkVector.getY()), velConPixel, accConPixel)
                         .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                             drive.activateIntake();
-                            drive.activateIntakeServoTwo();
+                            if (secondCycle)
+                                drive.activateIntakeServoOne();
+                            else
+                                drive.activateIntakeServoTwo();
                         })
-                        .splineToConstantHeading(new Vector2d(-56.7, 50), Math.toRadians(270), velConPark, accConPark)
-                        .lineToSplineHeading(new Pose2d(-56.7, 31, Math.toRadians(195)), velConPark, accConPark)
+                        .splineToConstantHeading(new Vector2d(-56.25, 50), Math.toRadians(270), velConPark, accConPark)
+                        .lineToSplineHeading(new Pose2d(-56.25, (secondCycle ? 27:31), Math.toRadians(195)), velConPark, accConPark)
                         .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                             robotState = State.INTAKE;
                             startTime = drive.elapsedSeconds();
@@ -216,10 +231,14 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
             {
                 if (drive.elapsedSeconds() - startTime > 1.5 || drive.getPixelCount() == RRAutoDrive.PixelCount.TWO)
                 {
-                    if (drive.elapsedSeconds() > 20)
+                    if (drive.elapsedSeconds() > 69) {
                         robotState = State.DEPOSIT_1;
-                    else
+                        depositState = State.DEPOSIT_1;
+                    }
+                    else {
                         robotState = State.DEPOSIT_2;
+                        depositState = State.DEPOSIT_2;
+                    }
                 }
             }
             if (robotState == State.DEPOSIT_1)
@@ -235,8 +254,8 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                         .addDisplacementMarker(52, () -> {
                             drive.deactivateIntake();
                         })
-                        .lineToSplineHeading(new Pose2d((trajSeqStack.end().getX()-34.0)/2, (58.0+trajSeqStack.end().getY())/2, Math.toRadians(160)), velConPixel, accConPixel)
-                        .lineToSplineHeading(new Pose2d(-34, 58, Math.toRadians(180)), velConPixel, accConPixel)
+                        .lineToSplineHeading(new Pose2d((trajSeqStack.end().getX()-34.0)/2, (parkVector.getY()+trajSeqStack.end().getY())/2, Math.toRadians(160)), RRAutoDrive.velCon(55), RRAutoDrive.accCon(37))
+                        .lineToSplineHeading(new Pose2d(-34, parkVector.getY(), Math.toRadians(180)), RRAutoDrive.velCon(55), RRAutoDrive.accCon(37))
                         .UNSTABLE_addDisplacementMarkerOffset(60, () ->
                         {
                             drive.activateIntakeServo();
@@ -248,7 +267,7 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                             drive.deactivateIntakeServo();
                             drive.activateArm();
                         })
-                        .lineToConstantHeading(new Vector2d(50, 58), velConPixel, accConPixel)
+                        .lineToConstantHeading(parkVector, RRAutoDrive.velCon(55), RRAutoDrive.accCon(37))
                         .UNSTABLE_addTemporalMarkerOffset(0, () ->
                         {
                             drive.deactivateLeftClaw();
@@ -262,6 +281,15 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                         .UNSTABLE_addTemporalMarkerOffset(1.25, () -> {
                             drive.deactivateIntakeServo();
                             drive.deactivateArm();
+                            if (drive.elapsedSeconds() < 23)
+                            {
+                                secondCycle = true;
+                                robotState = State.STACK_PATH;
+                            }
+                            else
+                            {
+                                robotState = State.PARK;
+                            }
                         })
                         .waitSeconds(1.5)
                         .build();
@@ -281,12 +309,12 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                         .addDisplacementMarker(52, () -> {
                             drive.deactivateIntake();
                         })
-                        .lineToSplineHeading(new Pose2d((trajSeqStack.end().getX()-34.0)/2, (58.0+trajSeqStack.end().getY())/2, Math.toRadians(160)), velConPixel, accConPixel)
-                        .lineToSplineHeading(new Pose2d(-34, 58, Math.toRadians(180)), velConPixel, accConPixel)
+                        .lineToSplineHeading(new Pose2d((trajSeqStack.end().getX()-34.0)/2, (parkVector.getY()+trajSeqStack.end().getY())/2, Math.toRadians(160)), RRAutoDrive.velCon(47), RRAutoDrive.accCon(37))
+                        .lineToSplineHeading(new Pose2d(-34, parkVector.getY(), Math.toRadians(180)), velConPixel, accConPixel)
                         .UNSTABLE_addDisplacementMarkerOffset(60, () ->
                         {
                             drive.activateIntakeServo();
-                            drive.activateLift(642);
+                            drive.activateLift(700);
                             drive.initArm();
                         })
                         .UNSTABLE_addDisplacementMarkerOffset(74, () ->
@@ -294,27 +322,38 @@ public class AutoBlueBackdrop_GREEN_LEMONS_COMPLEX_BACKDROP extends LinearOpMode
                             drive.deactivateIntakeServo();
                             drive.activateArm();
                         })
-                        .lineToConstantHeading(new Vector2d(20, 58), velConPixel, accConPixel)
-                        .lineToConstantHeading(new Vector2d(50, 36), velConPixel, accConPixel)
-                        .lineToConstantHeading(new Vector2d(54.25, 36), RRAutoDrive.velCon(15), RRAutoDrive.accCon(5))
+                        .lineToConstantHeading(new Vector2d(20, parkVector.getY()), RRAutoDrive.velCon(47), RRAutoDrive.accCon(37))
+                        .splineToConstantHeading(new Vector2d(50, 34), Math.toRadians(90), RRAutoDrive.velCon(47), RRAutoDrive.accCon(37))
+                        .lineToConstantHeading(new Vector2d(54.75, 34), RRAutoDrive.velCon(25), RRAutoDrive.accCon(20))
                         .UNSTABLE_addTemporalMarkerOffset(0,() -> {
                             drive.deactivateRightClaw();
                             drive.deactivateLeftClaw();
                         })
                         .waitSeconds(.75)
-                        .splineToConstantHeading(new Vector2d(parkVector.getX(), 36), Math.toRadians(90), velConPixel, accConPixel)
+                        .splineToConstantHeading(new Vector2d(parkVector.getX(), 34), Math.toRadians(90), velConPixel, accConPixel)
                         .UNSTABLE_addTemporalMarkerOffset(1, () ->
                         {
                             drive.restArm();
                         })
-                        .lineTo(parkVector, velConPixel, accConPixel)
+                        .lineToConstantHeading(parkVector, velConPixel, accConPixel)
                         .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
+                            drive.activateIntakeServo();
                             drive.deactivateLift();
+                            if (drive.elapsedSeconds() < 17)
+                            {
+                                secondCycle = true;
+                                robotState = State.STACK_PATH;
+                            }
                         })
-                        .lineTo(parkVector2, velConPixel, accConPixel)
                         .build();
                 robotState = State.PATH_RUNNING;
                 drive.followTrajectorySequenceAsync(trajSeqDeposit2);
+            }
+            if (robotState == State.PARK)
+            {
+                trajSeqPark = drive.trajectorySequenceBuilder(trajSeqDeposit.end())
+                        .lineToConstantHeading(parkVector2, velConPark, accConPark)
+                        .build();
             }
             telemetry.addData("elapsed time: ", drive.elapsedSeconds());
             telemetry.update();

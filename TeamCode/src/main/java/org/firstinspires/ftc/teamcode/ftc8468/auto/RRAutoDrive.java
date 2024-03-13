@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.ftc8468.auto;
 
 
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +15,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc8468.RobotConstants;
 import org.firstinspires.ftc.teamcode.ftc8468.teleop.RobotDrive;
@@ -627,7 +630,7 @@ public class RRAutoDrive extends SampleMecanumDrive {
 //    }
 
     public void activateIntake() {
-        intakeMotor.setPower(.8);
+        intakeMotor.setPower(1);
     }
     public void deactivateIntake() {
         intakeMotor.setPower(0);
@@ -682,6 +685,10 @@ public class RRAutoDrive extends SampleMecanumDrive {
     }
     public void activateIntakeServoTwo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_TWO);
+    }
+
+    public void activateIntakeServoOne() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_TELEOP);
     }
     public void deactivateIntakeServo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_REST);
@@ -809,6 +816,16 @@ public class RRAutoDrive extends SampleMecanumDrive {
     public double elapsedSeconds()
     {
         return elapsedTime.seconds();
+    }
+
+    public static TrajectoryVelocityConstraint velCon(double vel)
+    {
+        return SampleMecanumDrive.getVelocityConstraint(vel, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
+    }
+
+    public static TrajectoryAccelerationConstraint accCon(double acc)
+    {
+        return SampleMecanumDrive.getAccelerationConstraint(acc);
     }
 
 }
