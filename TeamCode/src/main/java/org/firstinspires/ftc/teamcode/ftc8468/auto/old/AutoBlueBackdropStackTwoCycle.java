@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc8468.auto.competitionOpMode;
+package org.firstinspires.ftc.teamcode.ftc8468.auto.old;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -74,8 +74,8 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(54.75, 32, Math.toRadians(180)), velConBackdrop, accConBackdrop)
-                    .waitSeconds(.5)
+                    .lineToLinearHeading(new Pose2d(55.25, 32, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .waitSeconds(0.5)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
@@ -117,11 +117,15 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.reverseIntake();
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.6, () ->
+                    .UNSTABLE_addTemporalMarkerOffset(0.9, () ->
+                    {
+                        drive.activateIntake();
+                    })
+                    .waitSeconds(.3)
+                    .UNSTABLE_addDisplacementMarkerOffset(40, () ->
                     {
                         drive.deactivateIntake();
                     })
-                    .waitSeconds(.3)
                     .UNSTABLE_addDisplacementMarkerOffset(50, () ->
                     {
                         drive.activateLift(liftMotorTicks);
@@ -169,11 +173,15 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.reverseIntake();
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.6, () ->
+                    .UNSTABLE_addTemporalMarkerOffset(0.9, () ->
+                    {
+                        drive.activateIntake();
+                    })
+                    .waitSeconds(.3)
+                    .UNSTABLE_addDisplacementMarkerOffset(40, () ->
                     {
                         drive.deactivateIntake();
                     })
-                    .waitSeconds(.3)
                     .UNSTABLE_addDisplacementMarkerOffset(50, () ->
                     {
                         drive.activateLift(liftMotorTicks);
@@ -212,7 +220,7 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(54.75, 26, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .lineToLinearHeading(new Pose2d(55.25, 26, Math.toRadians(180)), velConBackdrop, accConBackdrop)
                     .waitSeconds(.5)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
@@ -255,11 +263,15 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.reverseIntake();
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.6, () ->
+                    .UNSTABLE_addTemporalMarkerOffset(0.9, () ->
+                    {
+                        drive.activateIntake();
+                    })
+                    .waitSeconds(.3)
+                    .UNSTABLE_addDisplacementMarkerOffset(40, () ->
                     {
                         drive.deactivateIntake();
                     })
-                    .waitSeconds(.3)
                     .UNSTABLE_addDisplacementMarkerOffset(50, () ->
                     {
                         drive.activateLift(liftMotorTicks);
@@ -307,11 +319,15 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.reverseIntake();
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.6, () ->
+                    .UNSTABLE_addTemporalMarkerOffset(0.9, () ->
+                    {
+                        drive.activateIntake();
+                    })
+                    .waitSeconds(.3)
+                    .UNSTABLE_addDisplacementMarkerOffset(40, () ->
                     {
                         drive.deactivateIntake();
                     })
-                    .waitSeconds(.3)
                     .UNSTABLE_addDisplacementMarkerOffset(50, () ->
                     {
                         drive.activateLift(liftMotorTicks);
@@ -350,7 +366,7 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                     {
                         drive.activateArm();
                     })
-                    .lineToSplineHeading(new Pose2d(54.75, 40.5, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .lineToSplineHeading(new Pose2d(55.25, 40.5, Math.toRadians(180)), velConBackdrop, accConBackdrop)
                     .waitSeconds(.5)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
@@ -393,11 +409,15 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.reverseIntake();
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.6, () ->
+                    .UNSTABLE_addTemporalMarkerOffset(0.9, () ->
+                    {
+                        drive.activateIntake();
+                    })
+                    .waitSeconds(.3)
+                    .UNSTABLE_addDisplacementMarkerOffset(40, () ->
                     {
                         drive.deactivateIntake();
                     })
-                    .waitSeconds(.3)
                     .UNSTABLE_addDisplacementMarkerOffset(50, () ->
                     {
                         drive.activateLift(liftMotorTicks);
@@ -445,11 +465,15 @@ public class AutoBlueBackdropStackTwoCycle extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.reverseIntake();
                     })
-                    .UNSTABLE_addTemporalMarkerOffset(0.6, () ->
+                    .UNSTABLE_addTemporalMarkerOffset(0.9, () ->
                     {
                         drive.deactivateIntake();
                     })
                     .waitSeconds(.3)
+                    .UNSTABLE_addDisplacementMarkerOffset(40, () ->
+                    {
+                        drive.deactivateIntake();
+                    })
                     .UNSTABLE_addDisplacementMarkerOffset(50, () ->
                     {
                         drive.activateLift(liftMotorTicks);

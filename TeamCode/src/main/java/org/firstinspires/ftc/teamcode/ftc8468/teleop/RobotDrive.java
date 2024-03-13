@@ -546,6 +546,19 @@ public class RobotDrive extends MecanumDrive {
     public void activateIntakeServo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_ACTIVE);
     }
+
+    public double getIntakeServoPosition() {
+        return intakeServo.getPosition();
+    }
+
+    public void setIntakeServoPosition(double pos) {
+        intakeServo.setPosition(pos);
+    }
+
+    public void activateIntakeServoTeleop() {
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_TELEOP);
+    }
+
     public void deactivateIntakeServo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_REST);
     }

@@ -16,22 +16,25 @@ import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsyste
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous (name = "AutoRedBackdropEdgePark")
-public class AutoRedBackdropEdgePark extends LinearOpMode {
+@Autonomous (name = "AutoRedBackdrop_GREEN_LEMONS")
+public class AutoRedBackdrop_GREEN_LEMONS extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "red";
 
     private TeamElementSubsystem teamElementDetection;
 
-    private int liftMotorTicks = 400;
+    private int liftMotorTicks = 390;
 
     SplitAveragePipeline.ZONE zone = SplitAveragePipeline.ZONE.RIGHT;
     public TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight;
 
-    Vector2d parkVector = new Vector2d(51, -61.5);
+    Vector2d parkVector = new Vector2d(50, -61.5);
     Vector2d parkVector2 = new Vector2d(60, -61.5);
-    TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
-    TrajectoryAccelerationConstraint accConPixel = SampleMecanumDrive.getAccelerationConstraint(20);
+    TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(42, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
+    TrajectoryAccelerationConstraint accConPixel = SampleMecanumDrive.getAccelerationConstraint(30);
+
+    TrajectoryVelocityConstraint velConPark = SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
+    TrajectoryAccelerationConstraint accConPark = SampleMecanumDrive.getAccelerationConstraint(20);
 
     public void runOpMode()
     {
@@ -66,12 +69,12 @@ public class AutoRedBackdropEdgePark extends LinearOpMode {
                         drive.activateArm();
                     })
                     .lineToLinearHeading(new Pose2d(54.75, -36.75, Math.toRadians(180)), velConPixel, accConPixel)
-                    .waitSeconds(1)
+                    .waitSeconds(.75)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
-                    .lineTo(new Vector2d(51, -36.75), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .splineToConstantHeading(new Vector2d(parkVector.getX(), -39.75), Math.toRadians(270), velConPixel, accConPixel)
                     .UNSTABLE_addTemporalMarkerOffset(1, () ->
                     {
                         drive.restArm();
@@ -95,12 +98,12 @@ public class AutoRedBackdropEdgePark extends LinearOpMode {
                         drive.activateArm();
                     })
                     .lineToLinearHeading(new Pose2d(54.75, -31, Math.toRadians(180)), velConPixel, accConPixel)
-                    .waitSeconds(1)
+                    .waitSeconds(.75)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
-                    .lineTo(new Vector2d(51, -31), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .splineToConstantHeading(new Vector2d(parkVector.getX(), -34.75), Math.toRadians(270), velConPixel, accConPixel)
                     .UNSTABLE_addTemporalMarkerOffset(1, () ->
                     {
                         drive.restArm();
@@ -118,23 +121,23 @@ public class AutoRedBackdropEdgePark extends LinearOpMode {
                         drive.deactivateIntakeServo();
                         drive.activateLift(liftMotorTicks);
                     })
-                    .lineTo(new Vector2d(25.5, -38), velConPixel, accConPixel)
+                    .lineTo(new Vector2d(27, -38), velConPixel, accConPixel)
                     .UNSTABLE_addDisplacementMarkerOffset(0, () ->
                     {
                         drive.activateArm();
                     })
-                    .lineToSplineHeading(new Pose2d(54.75, -41, Math.toRadians(180)), velConPixel, accConPixel)
-                    .waitSeconds(1)
+                    .lineToLinearHeading(new Pose2d(54.85, -42.85, Math.toRadians(180)), velConPixel, accConPixel)
+                    .waitSeconds(.75)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
                         drive.deactivateLeftClaw();
                     })
-                    .lineTo(new Vector2d(51, -41), SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(5))
+                    .splineToConstantHeading(new Vector2d(parkVector.getX(), -45.75), Math.toRadians(270), velConPark, accConPark)
                     .UNSTABLE_addTemporalMarkerOffset(1, () ->
                     {
                         drive.restArm();
                     })
-                    .lineTo(parkVector, velConPixel, accConPixel)
+                    .lineTo(parkVector, velConPark, accConPark)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateLift();
                     })

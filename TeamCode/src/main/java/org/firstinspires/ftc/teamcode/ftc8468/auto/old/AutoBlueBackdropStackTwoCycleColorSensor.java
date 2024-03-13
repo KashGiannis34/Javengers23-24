@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc8468.auto.competitionOpMode;
+package org.firstinspires.ftc.teamcode.ftc8468.auto.old;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -16,10 +16,12 @@ import org.firstinspires.ftc.teamcode.ftc8468.auto.pipelines.TeamElementSubsyste
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous (name = "AutoBlueBackdropStackOneCycleColorSensor")
-public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
+@Autonomous (name = "AutoBlueBackdropStackTwoCycleColorSensor")
+public class AutoBlueBackdropStackTwoCycleColorSensor extends LinearOpMode {
     RRAutoDrive drive;
     String curAlliance = "blue";
+
+    RRAutoDrive.PixelCount pixelCount;
 
     private TeamElementSubsystem teamElementDetection;
 
@@ -36,7 +38,7 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
     Wiggle wiggle = Wiggle.LEFT;
 
     SplitAveragePipeline.ZONE zone = SplitAveragePipeline.ZONE.RIGHT;
-    public TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight, trajSeqStackDrive, trajWiggleLeft, trajWiggleRight, trajWiggleNoPixels;
+    public TrajectorySequence trajSeqCenter, trajSeqLeft, trajSeqRight, trajSeqStackDrive, trajWiggleLeft, trajWiggleRight, trajWiggleNoPixels, trajSecondCycle;
     TrajectoryVelocityConstraint velConPixel = SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
     TrajectoryAccelerationConstraint accConPixel = SampleMecanumDrive.getAccelerationConstraint(30);
 
@@ -54,7 +56,9 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
         COLLECTION_CYCLE_1_WIGGLE,
         COLLECTION_CYCLE_1_PIXEL_2,
         DEPOSIT_CYCLE_1_INIT,
-        DEPOSIT_CYCLE_1
+        DEPOSIT_CYCLE_1,
+        FIRST_PATHS_AGAIN_INIT,
+        FIRST_PATHS_AGAIN
     }
 
     State robotState = State.FIRST_PATHS;
@@ -99,7 +103,7 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(54.75, 32, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .lineToLinearHeading(new Pose2d(55.75, 32, Math.toRadians(180)), velConBackdrop, accConBackdrop)
                     .waitSeconds(.5)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
@@ -147,7 +151,7 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                     {
                         drive.activateArm();
                     })
-                    .lineToLinearHeading(new Pose2d(54.75, 26, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .lineToLinearHeading(new Pose2d(55.75, 26, Math.toRadians(180)), velConBackdrop, accConBackdrop)
                     .waitSeconds(.5)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
@@ -195,7 +199,7 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                     {
                         drive.activateArm();
                     })
-                    .lineToSplineHeading(new Pose2d(54.75, 40.5, Math.toRadians(180)), velConBackdrop, accConBackdrop)
+                    .lineToSplineHeading(new Pose2d(55.75, 40.5, Math.toRadians(180)), velConBackdrop, accConBackdrop)
                     .waitSeconds(.5)
                     .UNSTABLE_addDisplacementMarkerOffset(0,() -> {
                         drive.deactivateRightClaw();
@@ -232,6 +236,9 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                     })
                     .build();
             trajWiggleLeft = drive.trajectorySequenceBuilder(trajSeqCenter.end())
+                    .addDisplacementMarker(0, () -> {
+                        drive.activateIntakeServoTwo();
+                    })
                     .turn(Math.toRadians(30))
                     .UNSTABLE_addTemporalMarkerOffset(0, () ->{
                         startTime = drive.elapsedSeconds();
@@ -240,6 +247,9 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                     })
                     .build();
             trajWiggleRight = drive.trajectorySequenceBuilder(trajSeqCenter.end())
+                    .addDisplacementMarker(0, () -> {
+                        drive.activateIntakeServoTwo();
+                    })
                     .turn(Math.toRadians(-30))
                     .UNSTABLE_addTemporalMarkerOffset(0, () ->{
                         startTime = drive.elapsedSeconds();
@@ -248,6 +258,9 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                     })
                     .build();
             trajWiggleNoPixels = drive.trajectorySequenceBuilder(trajSeqCenter.end())
+                    .addDisplacementMarker(0, () -> {
+                        drive.activateIntakeServoTwo();
+                    })
                     .forward(2)
                     .waitSeconds(.25)
                     .back(2)
@@ -276,6 +289,25 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested())
         {
+            pixelCount = drive.getPixelCount();
+            if (robotState == State.FIRST_PATHS_AGAIN_INIT)
+            {
+                if (drive.elapsedSeconds() > 22)
+                    break;
+                trajSecondCycle = drive.trajectorySequenceBuilder(trajSeqStackDrive.end())
+                        .addDisplacementMarker(60, () ->
+                        {
+                            drive.activateIntake();
+                            drive.activateIntakeServoThree();
+                        })
+                        .lineToConstantHeading(new Vector2d(-57, 10), velConPixel, accConSpline)
+                        .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                            robotState = State.FIRST_PATHS_COMPLETED;
+                        })
+                        .build();
+                drive.followTrajectorySequenceAsync(trajSecondCycle);
+                robotState = State.FIRST_PATHS_AGAIN;
+            }
             if (robotState == State.FIRST_PATHS_COMPLETED)
             {
                 startTime = drive.elapsedSeconds();
@@ -283,19 +315,19 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
             }
             if (robotState == State.COLLECTION_CYCLE_1_PIXEL_1)
             {
-                if (drive.getPixelCount() == RRAutoDrive.PixelCount.TWO)
+                if (pixelCount == RRAutoDrive.PixelCount.TWO)
                 {
                     wiggle = Wiggle.NONE;
                     robotState = State.COLLECTION_CYCLE_1_PIXEL_2;
                 }
 
-                if (drive.getPixelCount() == RRAutoDrive.PixelCount.ONE)
+                if (pixelCount == RRAutoDrive.PixelCount.ONE)
                 {
                     startTimeOnePixel = drive.elapsedSeconds();
                     robotState = State.COLLECTION_CYCLE_1_PIXEL_1_IN;
                 }
 
-                if (drive.elapsedSeconds() - startTime > 2 && drive.getPixelCount() == RRAutoDrive.PixelCount.ZERO)
+                if (drive.elapsedSeconds() - startTime > 2 && pixelCount == RRAutoDrive.PixelCount.ZERO)
                 {
                     robotState = State.COLLECTION_CYCLE_1_WIGGLE;
                     drive.followTrajectorySequenceAsync(trajWiggleNoPixels);
@@ -303,25 +335,25 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
             }
             if (robotState == State.COLLECTION_CYCLE_1_PIXEL_1_IN)
             {
-                if (drive.elapsedSeconds() - startTimeOnePixel > .5)
-                {
-                    if (drive.leftPixelContained() && drive.getPixelCount() == RRAutoDrive.PixelCount.ONE) {
-                        robotState = State.COLLECTION_CYCLE_1_WIGGLE;
-                        drive.followTrajectorySequenceAsync(trajWiggleLeft);
-                    }
-                    if (drive.rightPixelContained() && drive.getPixelCount() == RRAutoDrive.PixelCount.ONE) {
-                        robotState = State.COLLECTION_CYCLE_1_WIGGLE;
-                        drive.followTrajectorySequenceAsync(trajWiggleRight);
-                    }
-                }
-
-                if (drive.getPixelCount() == RRAutoDrive.PixelCount.TWO)
+                if (pixelCount == RRAutoDrive.PixelCount.TWO)
                 {
                     wiggle = Wiggle.NONE;
                     robotState = State.COLLECTION_CYCLE_1_PIXEL_2;
                 }
 
-                if (drive.elapsedSeconds() - startTime > 2 && drive.getPixelCount() == RRAutoDrive.PixelCount.ZERO)
+                if (drive.elapsedSeconds() - startTimeOnePixel > .5 && pixelCount == RRAutoDrive.PixelCount.ONE)
+                {
+                    if (drive.leftPixelContained() && pixelCount == RRAutoDrive.PixelCount.ONE) {
+                        robotState = State.COLLECTION_CYCLE_1_WIGGLE;
+                        drive.followTrajectorySequenceAsync(trajWiggleLeft);
+                    }
+                    if (drive.rightPixelContained() && pixelCount == RRAutoDrive.PixelCount.ONE) {
+                        robotState = State.COLLECTION_CYCLE_1_WIGGLE;
+                        drive.followTrajectorySequenceAsync(trajWiggleRight);
+                    }
+                }
+
+                if (drive.elapsedSeconds() - startTime > 2 && pixelCount == RRAutoDrive.PixelCount.ZERO)
                 {
                     robotState = State.COLLECTION_CYCLE_1_WIGGLE;
                     drive.followTrajectorySequenceAsync(trajWiggleNoPixels);
@@ -329,7 +361,7 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
             }
             if (robotState == State.COLLECTION_CYCLE_1_PIXEL_2)
             {
-                if (drive.getPixelCount() == RRAutoDrive.PixelCount.TWO) {
+                if (pixelCount == RRAutoDrive.PixelCount.TWO) {
                     robotState = State.DEPOSIT_CYCLE_1_INIT;
                 }
 
@@ -343,10 +375,8 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                     drivePose = trajWiggleLeft.end();
                 else if (wiggle == Wiggle.RIGHT)
                     drivePose = trajWiggleRight.end();
-                else if (wiggle == Wiggle.NO_PIXELS)
-                    drivePose = trajWiggleNoPixels.end();
                 else
-                    drivePose = trajSeqCenter.end();
+                    drivePose = trajWiggleNoPixels.end();
                 trajSeqStackDrive = drive.trajectorySequenceBuilder(drivePose)
                         .addDisplacementMarker(0, () ->
                         {
@@ -384,6 +414,11 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
                             drive.restArmAuto();
                             drive.deactivateLift();
                         })
+                        .UNSTABLE_addTemporalMarkerOffset(0.5, () ->
+                        {
+                            drive.deactivateArm();
+                            robotState = State.FIRST_PATHS_AGAIN_INIT;
+                        })
                         .build();
                 robotState = State.DEPOSIT_CYCLE_1;
                 drive.followTrajectorySequenceAsync(trajSeqStackDrive);
@@ -407,6 +442,7 @@ public class AutoBlueBackdropStackOneCycleColorSensor extends LinearOpMode {
     private void updateTelemetry()
     {
         telemetry.addData("robot state: ", robotState);
+        telemetry.addData("pixelCount: ", robotState);
         telemetry.update();
     }
 }

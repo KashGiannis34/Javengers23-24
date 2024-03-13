@@ -627,13 +627,13 @@ public class RRAutoDrive extends SampleMecanumDrive {
 //    }
 
     public void activateIntake() {
-        intakeMotor.setPower(1.0);
+        intakeMotor.setPower(.8);
     }
     public void deactivateIntake() {
         intakeMotor.setPower(0);
     }
     public void reverseIntake() {
-        intakeMotor.setPower(-1.0);
+        intakeMotor.setPower(-.8);
     }
 
     public void activateArm() {
@@ -669,7 +669,7 @@ public class RRAutoDrive extends SampleMecanumDrive {
     }
 
     public void activateIntakeServo() {
-        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_ACTIVE);
+        intakeServo.setPosition(RobotConstants.INTAKE_POSITION_ACTIVE_AUTO);
     }
     public void activateIntakeServoFive() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_FIVE);
@@ -685,6 +685,14 @@ public class RRAutoDrive extends SampleMecanumDrive {
     }
     public void deactivateIntakeServo() {
         intakeServo.setPosition(RobotConstants.INTAKE_POSITION_REST);
+    }
+
+    public double getIntakeServoPosition() {
+        return intakeServo.getPosition();
+    }
+
+    public void setIntakeServoPosition(double pos) {
+        intakeServo.setPosition(pos);
     }
 
 

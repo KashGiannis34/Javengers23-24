@@ -115,18 +115,26 @@ public class TrajTest {
                                 .build()
                 );
 
+        Vector2d parkVector = new Vector2d(51, -61.5);
+        Vector2d parkVector2 = new Vector2d(60, -61.5);
+
         RoadRunnerBotEntity myBotStackTest = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(18, -64, Math.toRadians(90)))
-                                .lineTo(new Vector2d(18, -30), velConPixel, accConPixel)
-                                .lineToLinearHeading(new Pose2d(56.25, -36, Math.toRadians(180)), velConPixel, accConPixel)
-                                .lineTo(new Vector2d(53, -37))
-//                                .splineToConstantHeading(new Vector2d(49, -23), Math.toRadians(270), velConPixel, accConPixel)
-                                .splineToConstantHeading(new Vector2d(40, -10), Math.toRadians(180), velCon, accCon)
-                                .lineTo(new Vector2d(-54, -10), velConPixel, accConPixel)
+                                .lineTo(new Vector2d(27, -38), velConPixel, accConPixel)
+                                .lineToLinearHeading(new Pose2d(54.85, -42.85, Math.toRadians(180)), velConPixel, accConPixel)
+//                                .splineToConstantHeading(new Vector2d(41, -52), Math.toRadians(270))
+                                .splineToConstantHeading(new Vector2d(10, -57), Math.toRadians(180), velConPixel, accConPixel)
+                                .lineToConstantHeading(new Vector2d(-40, -57), velConPixel, accConPixel)
+                                .splineToConstantHeading(new Vector2d(-57.3, -50), Math.toRadians(90), velConPixel, accConPixel)
+                                .lineToSplineHeading(new Pose2d(-57.3, -37, Math.toRadians(165)), velConPixel, accConPixel)
+
+                                .lineToSplineHeading(new Pose2d(-57.3, -50, Math.toRadians(180)), velConPixel, accConPixel)
+                                .splineToConstantHeading(new Vector2d(-30, -57), Math.toRadians(0), velConPixel, accConPixel)
+                                .lineToConstantHeading(new Vector2d(50, -57), velConPixel, accConPixel)
                                 .build()
                 );
 

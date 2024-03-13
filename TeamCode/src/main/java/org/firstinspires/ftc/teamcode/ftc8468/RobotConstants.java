@@ -27,19 +27,22 @@ public class RobotConstants {
     public static final float RIGHT_CLIMB_POSITION_ACTIVE = 0.0f;
     public static final float RIGHT_CLIMB_POSITION_DEACTIVE= 1.0f;
 
-    public static final float RIGHT_RAISE_CLIMB_POSITION_ACTIVE = 0.55f;
-    public static final float RIGHT_RAISE_CLIMB_POSITION_DRONE = 0.80f;
-    public static final float RIGHT_RAISE_CLIMB_POSITION_DEACTIVE= 0.92f;
+    public static final float RIGHT_RAISE_CLIMB_POSITION_ACTIVE = .55f; // 0.98f;
+    public static final float RIGHT_RAISE_CLIMB_POSITION_DRONE = .8f; // 0.69f;
+    public static final float RIGHT_RAISE_CLIMB_POSITION_DEACTIVE= .98f; // 0.32f;
 
     public static final float LEFT_RAISE_CLIMB_POSITION_ACTIVE = 0.88f;
-    public static final float LEFT_RAISE_CLIMB_POSITION_DRONE = 0.68f;
+    public static final float LEFT_RAISE_CLIMB_POSITION_DRONE = 0.66f;
     public static final float LEFT_RAISE_CLIMB_POSITION_DEACTIVE= 0.53f;
 
     public static final float INTAKE_POSITION_FIVE = 0.77f;
     public static final float INTAKE_POSITION_FOUR = 0.81f;
-    public static final float INTAKE_POSITION_THREE = 0.842f;
-    public static final float INTAKE_POSITION_TWO = 0.858f;
+    public static final float INTAKE_POSITION_THREE = 0.825f;
+    public static final float INTAKE_POSITION_TWO = 0.85f;
     public static final float INTAKE_POSITION_ACTIVE = 0.80f;
+
+    public static final float INTAKE_POSITION_ACTIVE_AUTO = 0.78f;
+    public static final float INTAKE_POSITION_TELEOP = 0.882f;
     public static final float INTAKE_POSITION_REST = 0.59f;
 
 //    public static final float DRONE_POSITION_ACTIVE = 0.75f;

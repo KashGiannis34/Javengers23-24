@@ -1,22 +1,15 @@
 package org.firstinspires.ftc.teamcode.ftc8468.teleop;
 
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.ftc8468.RobotConstants;
 
-
-@TeleOp(name = "VR_MainTeleOp", group = "ftc8468")
-public class VR_MainTeleOp extends LinearOpMode {
+@TeleOp(name = "VR_MainTeleOp_One_Player_TEST", group = "ftc8468")
+public class VR_MainTeleOp_One_Player_TEST extends LinearOpMode {
     private double wheelMotorSpeed = 0.7;
     private int shooterTicks = 2475;
     private int shooterTicksEndGame = 2375;
-
-    private boolean overrideAutoClaw = true;
-    private boolean overrideButtonPressed = false;
-    boolean bPressed = false;
-    boolean climbServoActivated = false;
 
     /**
      // RPM = 435; TICKS_PER_REV = 384.5; Gear Ratio = 2;
@@ -35,14 +28,14 @@ public class VR_MainTeleOp extends LinearOpMode {
     int TICKS_FOR_THREE = 1557; // Ticks for 3 rotation is 28 * 15 = 2307;
     private int liftMotorTicks = 425; //425;
 
-//    private RobotDrive drive = new RobotDrive(this);
+    //    private RobotDrive drive = new RobotDrive(this);
     RobotDrive drive = new RobotDrive();
 
     boolean driveSlow = false;
     boolean isLiftActivated = false;
     boolean isBottomReached = false;
     boolean isVertSensorTouchedOnce = false;
-//    boolean isArmUp = false;
+    //    boolean isArmUp = false;
     boolean isArmActivatedHalfway = false;
     boolean isGrabberActive = false;
     boolean gamepad1XisPressed = false;
@@ -80,7 +73,7 @@ public class VR_MainTeleOp extends LinearOpMode {
         double strafe2 = gamepad2.left_stick_x * 1;
         double rotate2 = gamepad2.right_stick_x * 1;
 
-        drive.driveMecanum(forward + forward2, (strafe + strafe2)*(driveSlow?1.4:1), rotate + rotate2, driveSlow);
+        drive.driveMecanum(forward + forward2, strafe + strafe2, rotate + rotate2, driveSlow);
 
         //check lift sensors and decide whether to stop it or not...
         if(!isLiftActivated) {
@@ -90,38 +83,31 @@ public class VR_MainTeleOp extends LinearOpMode {
             }
         }
 
-        if(gamepad1.left_bumper){
-            drive.deactivateLeftClaw();
-        }
-        if(gamepad1.right_bumper) {
-            drive.deactivateRightClaw();
-        }
+
         if(gamepad1.a) {
             drive.activateLeftClaw();
             drive.activateRightClaw();
             drive.stopIntake();
-            drive.deactivateIntakeServo();
+            drive.activateIntakeServo();
         }
 
         if((gamepad1.x) && (isVertSensorTouchedOnce)){
+            drive.activateIntakeServo();
             drive.activateIntake();
-            drive.activateIntakeServoTeleop();
             drive.deactivateArm();
             drive.deactivateLeftClaw();
             drive.deactivateRightClaw();
         }
         if(gamepad1.y){
             drive.reverseIntake();
-            drive.deactivateIntakeServo();
         }
 
-        if ((gamepad2.dpad_left) && (isBottomReached || isVertSensorTouchedOnce)) {
+        if ((gamepad1.dpad_left) && (isBottomReached || isVertSensorTouchedOnce)) {
             if (!isLiftActivated) {
                 //drive.reverseIntake();
                 drive.activateLift(550);
                 drive.activateArm();
                 drive.stopIntake();
-                drive.deactivateIntakeServo();
 //                isArmUp = true;
                 drive.activateIntakeServo();
                 driveSlow = true;
@@ -132,30 +118,14 @@ public class VR_MainTeleOp extends LinearOpMode {
             }
         }
 
-        if ((gamepad2.a) && (isBottomReached || isVertSensorTouchedOnce)) {
-            if (!isLiftActivated) {
-                //drive.reverseIntake();
-                drive.activateLift(400);
-                drive.activateArm();
-                drive.stopIntake();
-//                isArmUp = true;
-                drive.activateIntakeServo();
-                driveSlow = true;
-                isLiftActivated = true;
-                isBottomReached = false;
-                isVertSensorTouchedOnce = false;
-
-            }
-        }
-
-        if ((gamepad2.dpad_up) && (isBottomReached || isVertSensorTouchedOnce)) {
+        if ((gamepad1.dpad_up) && (isBottomReached || isVertSensorTouchedOnce)) {
             if (!isLiftActivated) {
                 //drive.reverseIntake();
                 drive.activateLift(850);
                 drive.activateArm();
                 drive.stopIntake();
 //                isArmUp = true;
-                drive.deactivateIntakeServo();
+                drive.activateIntakeServo();
                 driveSlow = true;
                 isLiftActivated = true;
                 isBottomReached = false;
@@ -164,29 +134,14 @@ public class VR_MainTeleOp extends LinearOpMode {
             }
         }
 
-        if ((gamepad2.dpad_right) && (isBottomReached || isVertSensorTouchedOnce)) {
+        if ((gamepad1.dpad_right) && (isBottomReached || isVertSensorTouchedOnce)) {
             if (!isLiftActivated) {
 
                 drive.activateLift(1250);
                 drive.activateArm();
                 drive.stopIntake();
 //                isArmUp = true;
-                drive.deactivateIntakeServo();
-                driveSlow = true;
-                isLiftActivated = true;
-                isBottomReached = false;
-                isVertSensorTouchedOnce = false;
-
-            }
-        }
-        if(gamepad2.left_trigger > 0.5) {
-            if (!isLiftActivated) {
-
-                drive.activateLift(1400);
-                drive.activateArm();
-                drive.stopIntake();
-//                isArmUp = true;
-                drive.deactivateIntakeServo();
+                drive.activateIntakeServo();
                 driveSlow = true;
                 isLiftActivated = true;
                 isBottomReached = false;
@@ -195,7 +150,11 @@ public class VR_MainTeleOp extends LinearOpMode {
             }
         }
 
-        if(gamepad2.right_trigger > 0.5) {
+        if(gamepad1.left_trigger > 0.5) {
+            drive.deactivateIntakeServo();
+        }
+
+        if(gamepad1.right_trigger > 0.5) {
             if (!isLiftActivated) {
 
                 drive.activateLift(1600);
@@ -210,7 +169,8 @@ public class VR_MainTeleOp extends LinearOpMode {
 
             }
         }
-        if (gamepad2.dpad_down) {
+
+        if (gamepad1.dpad_down) {
             if (isLiftActivated) {
                 drive.deactivateLift();
                 drive.restArm();
@@ -222,80 +182,27 @@ public class VR_MainTeleOp extends LinearOpMode {
             }
         }
 
-        if (gamepad1.b && !bPressed) {
-            if (!climbServoActivated) {
-                climbServoActivated = true;
-            } else {
-                climbServoActivated = false;
-            }
-            bPressed = true;
-        }
-
-        if (!gamepad1.b && bPressed)
-        {
-            bPressed = false;
-        }
-
-        if (!climbServoActivated) {
+        if(gamepad2.left_bumper){
             drive.deactivateLeftClimb();
             drive.deactivateRightClimb();
-        } else {
+            drive.deactivateIntakeServo();
+        }
+        if(gamepad2.right_bumper) {
             drive.activateLeftClimb();
             drive.activateRightClimb();
-        }
-
-        if(gamepad1.dpad_right) {
-            drive.activateRightRaiseClimb();
-            drive.activateLeftRaiseClimb();
-            drive.deactivateIntakeServo();
-            drive.stopIntake();
-        }
-        if(gamepad1.dpad_left) {
-            drive.deactivateRightRaiseClimb();
-            drive.deactivateLeftRaiseClimb();
-            drive.deactivateIntakeServo();
-            drive.stopIntake();
-        }
-        if(gamepad1.dpad_up) {
-            drive.activateDroneServo();
-            drive.deactivateIntakeServo();
-            drive.stopIntake();
-        }
-        if(gamepad1.dpad_down) {
-            drive.activateLeftRaiseClimbDrone();
-            drive.activateRightRaiseClimbDrone();
             drive.deactivateIntakeServo();
             drive.stopIntake();
         }
 
-        if (!overrideAutoClaw) {
-            if (drive.leftPixelContained())
-                drive.activateLeftClaw();
-            if (drive.rightPixelContained())
-                drive.activateRightClaw();
-            if (drive.leftPixelContained() && drive.rightPixelContained()) {
-                drive.stopIntake();
-                if (Math.abs(drive.intakeServo.getPosition() - RobotConstants.INTAKE_POSITION_REST) > .01) {
-                    drive.deactivateIntakeServo();
-                }
+        if ((gamepad1.left_bumper || gamepad1.right_bumper) && drive.elapsedSeconds() > .2) {
+            if (gamepad1.right_bumper) {
+                drive.intakeServo.setPosition(Range.clip(drive.intakeServo.getPosition() + .005, 0, 1));
+            } else if (gamepad1.left_bumper) {
+                drive.intakeServo.setPosition(Range.clip(drive.intakeServo.getPosition() - .005, 0, 1));
             }
+            drive.resetRuntime();
         }
 
-//        if (gamepad2.y && !overrideButtonPressed)
-//        {
-//            overrideButtonPressed = true;
-//            if (overrideAutoClaw)
-//                overrideAutoClaw = false;
-//            else {
-//                overrideAutoClaw = true;
-//                drive.deactivateRightClaw();
-//                drive.deactivateLeftClaw();
-//            }
-//        }
-//        if (!gamepad2.y)
-//        {
-//            overrideButtonPressed = false;
-//        }
 
 //        if(gamepad2.dpad_down) {
 //            drive.restArm();
@@ -305,8 +212,7 @@ public class VR_MainTeleOp extends LinearOpMode {
 
         telemetry.addData("isBottomReached: ", isBottomReached);
         telemetry.addData("isLiftActivated: ", isLiftActivated);
-        telemetry.addData("pixelCount: ", drive.getPixelCount());
-        telemetry.addData("override auto claw: ", overrideAutoClaw);
+        telemetry.addData("Servo position", drive.getIntakeServoPosition());
 //        telemetry.addData("isArmUp: ", isArmUp);
         telemetry.update();
     }
